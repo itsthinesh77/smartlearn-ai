@@ -1,0 +1,17 @@
+{
+  "name": "smart-learn-ai",
+  "version": "1.0.0",
+  "description": "AI-Powered Learning Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve -s ./",
+    "dev": "npx serve -s ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
