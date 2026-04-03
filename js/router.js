@@ -33,11 +33,11 @@ export function getCurrentRoute() {
 
 export function initRouter() {
   const handleRoute = () => {
-    const rawHash = window.location.hash || '#/login';
+    const rawHash = window.location.hash || '#/home';
     // Strip query string before parsing path segments
     const hashWithoutQuery = rawHash.split('?')[0];
     const [path, ...paramParts] = hashWithoutQuery.slice(1).split('/').filter(Boolean);
-    const fullPath = '/' + (path || 'login');
+    const fullPath = '/' + (path || 'home');
     const params = paramParts;
 
     // Auth guard: if not logged in and not a public route → redirect to login

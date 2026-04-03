@@ -40,7 +40,7 @@ function renderApp() {
   app.innerHTML = `
     <nav class="navbar" id="navbar">
       <div class="navbar-inner">
-        <div class="nav-brand" onclick="location.hash='#/${user ? 'dashboard' : 'login'}'">
+        <div class="nav-brand" onclick="location.hash='#/home'">
           <div class="nav-brand-icon">🎓</div>
           <span>SmartLearn <span style="color: var(--accent-light); font-weight: 400; font-size: 0.75rem;">AI</span></span>
         </div>
@@ -56,8 +56,10 @@ function renderApp() {
         <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
         ` : `
         <div class="nav-links" id="nav-links">
+          <a class="nav-link" data-route="/home" onclick="location.hash='#/home'">Home</a>
           <a class="nav-auth-btn" onclick="location.hash='#/login'">Login / Register</a>
         </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
         `}
       </div>
     </nav>
