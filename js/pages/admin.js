@@ -1,6 +1,6 @@
 // ===== Admin Panel =====
 import { COURSES, QUESTIONS } from '../data.js';
-import { getCurrentUser, isAdmin, getAllQuizHistory } from '../store.js';
+import { getCurrentUser, isAdmin } from '../store.js';
 import { USERS } from '../data.js';
 
 let activeTab = 'questions';
@@ -122,56 +122,13 @@ function renderCoursesTab() {
 }
 
 function renderUsersTab() {
-  const allHistory = getAllQuizHistory();
-  const userStats = {};
-
-  allHistory.forEach(q => {
-    if (!userStats[q.userId]) {
-      userStats[q.userId] = { quizzes: 0, correct: 0, total: 0 };
-    }
-    userStats[q.userId].quizzes += 1;
-    userStats[q.userId].correct += q.score;
-    userStats[q.userId].total += q.total;
-  });
-
   return `
     <div class="card">
       <h3 style="margin-bottom: 16px;">Registered Users</h3>
-      <div class="table-wrapper" style="border: none;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Role</th>
-              <th>Email</th>
-              <th>Quizzes</th>
-              <th>Accuracy</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${USERS.map(u => {
-              const stats = userStats[u.id] || { quizzes: 0, correct: 0, total: 0 };
-              const accuracy = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
-              return `
-                <tr>
-                  <td>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                      <span>${u.avatar}</span>
-                      <div>
-                        <div style="font-weight: 600;">${u.name}</div>
-                        <div style="font-size: 0.78rem; color: var(--text-muted);">@${u.username}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td><span class="badge ${u.role === 'admin' ? 'badge-purple' : 'badge-accent'}">${u.role}</span></td>
-                  <td style="color: var(--text-secondary);">${u.email}</td>
-                  <td>${stats.quizzes}</td>
-                  <td>${stats.total > 0 ? `<span class="badge ${accuracy >= 80 ? 'badge-easy' : accuracy >= 60 ? 'badge-medium' : 'badge-hard'}">${accuracy}%</span>` : '<span style="color: var(--text-muted);">—</span>'}</td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
+      <div class="empty-state">
+        <div class="empty-state-icon">👥</div>
+        <h2>Users Management</h2>
+        <p style="color: var(--text-secondary);">User data migration to Supabase is in progress. This tab will be available soon.</p>
       </div>
     </div>
   `;
