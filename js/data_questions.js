@@ -21,6 +21,28 @@ function randomizeOptions(q) {
   return { ...q, o: newOptions, c: newCorrect };
 }
 
+// Utility: Auto-generate placeholders for missing questions
+function generatePlaceholders(topicId, courseId, difficulty, neededCount) {
+  const allCourses = [...SCHOOL_COURSES, ...UNI_COURSES];
+  const course = allCourses.find(c => c.id === courseId);
+  const topic = course ? course.topics.find(t => t.id === topicId) : null;
+  const topicName = topic ? topic.name : (course ? course.name : 'General Topic');
+
+  const placeholders = [];
+  for (let i = 0; i < neededCount; i++) {
+    placeholders.push({
+      question: `(Placeholder) What is a key concept of ${topicName}?`,
+      options: ['Correct Answer', 'Distractor 1', 'Distractor 2', 'Distractor 3'],
+      correct: 0,
+      explanation: `This is an auto-generated placeholder question because real questions for ${topicName} have not been added to the database yet.`,
+      difficulty: difficulty,
+      topicId: topicId,
+      courseId: courseId
+    });
+  }
+  return placeholders;
+}
+
 // ── HAND-CRAFTED QUESTION BANK ──
 // Every topic has questions with REAL distinct difficulty:
 // Easy = recall/definition, Medium = application/calculation, Hard = analysis/multi-step
@@ -285,16 +307,28 @@ export function getAllQuestions() {
 export function getTopicQuestions(topicId, difficulty, count = 5) {
   const bank = getAllQuestions();
   const topicQ = bank[topicId];
-  if (!topicQ) return [];
 
   // Get requested difficulty, supplement from adjacent if needed
-  let pool = [...(topicQ[difficulty] || [])];
-  if (pool.length < count) {
-    const fallbackOrder = difficulty === 'easy' ? ['medium','hard'] : difficulty === 'hard' ? ['medium','easy'] : ['easy','hard'];
-    for (const fb of fallbackOrder) {
-      if (pool.length >= count) break;
-      pool.push(...(topicQ[fb] || []).filter(q => !pool.includes(q)));
+  let pool = [];
+  if (topicQ) {
+    pool = [...(topicQ[difficulty] || [])];
+    if (pool.length < count) {
+      const fallbackOrder = difficulty === 'easy' ? ['medium','hard'] : difficulty === 'hard' ? ['medium','easy'] : ['easy','hard'];
+      for (const fb of fallbackOrder) {
+        if (pool.length >= count) break;
+        pool.push(...(topicQ[fb] || []).filter(q => !pool.includes(q)));
+      }
     }
+  }
+
+  // Supplement with placeholders if we still don't have enough
+  if (pool.length < count) {
+    const allCourses = [...SCHOOL_COURSES, ...UNI_COURSES];
+    let courseId = '';
+    for(const c of allCourses) {
+      if(c.topics.find(t => t.id === topicId)) { courseId = c.id; break; }
+    }
+    pool.push(...generatePlaceholders(topicId, courseId, difficulty, count - pool.length));
   }
 
   // Shuffle and re-randomize options for each attempt
@@ -331,6 +365,12 @@ export function getCourseQuestions(courseId, difficulty, count = 5) {
         if (topicQ && topicQ[fb]) pool.push(...topicQ[fb].filter(q => !pool.includes(q)));
       });
     }
+  }
+
+  // Supplement with placeholders if we still don't have enough
+  if (pool.length < count) {
+    const topicId = course.topics.length > 0 ? course.topics[0].id : 'general';
+    pool.push(...generatePlaceholders(topicId, courseId, difficulty, count - pool.length));
   }
 
   // Shuffle and re-randomize options

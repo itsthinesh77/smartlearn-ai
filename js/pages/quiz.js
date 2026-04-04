@@ -93,6 +93,16 @@ function renderQuizSetup(user, preselectedCourse, preselectedTopic) {
               <input type="hidden" id="quiz-difficulty" value="${recDiff}" />
             </div>
 
+            <div class="form-group" style="margin-top: 20px;">
+              <label class="form-label">🔢 Number of Questions</label>
+              <select class="form-select" id="quiz-question-count">
+                <option value="5" selected>5 Questions (Short quiz)</option>
+                <option value="10">10 Questions (Standard)</option>
+                <option value="15">15 Questions (Long)</option>
+                <option value="20">20 Questions (Full exam)</option>
+              </select>
+            </div>
+
             ${user ? `
             <div style="padding: 14px 18px; background: rgba(79, 125, 247, 0.06); border: 1px solid rgba(79, 125, 247, 0.12); border-radius: var(--radius-md); margin-bottom: 24px; font-size: 0.82rem; display: flex; align-items: center; gap: 10px;">
               <span style="font-size: 1.2rem;">🤖</span>
@@ -219,6 +229,7 @@ export function bindQuizEvents() {
       const courseId = document.getElementById('quiz-course')?.value;
       const topicId = document.getElementById('quiz-topic')?.value;
       const difficulty = document.getElementById('quiz-difficulty').value;
+      const questionCount = parseInt(document.getElementById('quiz-question-count')?.value || '5', 10);
 
       if (!courseId) {
         showToast('Please select a course', 'error'); return;
@@ -226,9 +237,9 @@ export function bindQuizEvents() {
 
       let questions;
       if (topicId) {
-        questions = getTopicQuestions(topicId, difficulty, 5);
+        questions = getTopicQuestions(topicId, difficulty, questionCount);
       } else {
-        questions = getCourseQuestions(courseId, difficulty, 5);
+        questions = getCourseQuestions(courseId, difficulty, questionCount);
       }
 
       if (questions.length === 0) {
