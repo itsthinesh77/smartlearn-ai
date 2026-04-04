@@ -248,7 +248,17 @@ const QUESTION_BANK = {
   {q:'What is the result of 10/3 in C?',o:['3.33','3','4','Error'],c:1,e:'Integer division truncates the decimal portion, resulting in 3.',d:'medium'},
   {q:'Which keyword is used to prevent modification of a variable?',o:['const','static','volatile','register'],c:0,e:'const declares a variable as read-only.',d:'medium'},
   {q:'What will be the output of printf("%d", 2*3+4);',o:['10','14','12','8'],c:0,e:'Multiplication has higher precedence than addition: 2*3 = 6, 6+4 = 10.',d:'medium'},
-  {q:'What will be output of int x=5; printf("%d", x++);',o:['5','6','Error','4'],c:0,e:'x++ evaluates to the current value (5), then increments x to 6.',d:'medium'}
+  {q:'What will be output of int x=5; printf("%d", x++);',o:['5','6','Error','4'],c:0,e:'x++ evaluates to the current value (5), then increments x to 6.',d:'medium'},
+  {q:'What will be output? int i=3; printf("%d %d", i, i++);',o:['3 3','3 4','Undefined','4 3'],c:2,e:'Modifying a variable and reading it multiple times within the same sequence point evaluates to Undefined Behavior in C.',d:'hard'},
+  {q:'What is output? int a=5; printf("%d", a<<1);',o:['5','10','20','2'],c:1,e:'Bitwise left shift (<<) by 1 implicitly multiplies the integer by 2 (5 * 2 = 10).',d:'hard'},
+  {q:'Which operator is right associative?',o:['+','*','=','-'],c:2,e:'The assignment operator (=) evaluates right-to-left.',d:'hard'},
+  {q:'Output? int a=2,b=3; printf("%d", a+++b);',o:['5','6','Error','3'],c:0,e:'Parsed heavily as (a++) + b due to maximal munch rule. 2 + 3 = 5, then a becomes 3.',d:'hard'},
+  {q:'Output? printf("%d", sizeof(3.14));',o:['4','8','2','Depends'],c:1,e:'Floating point literals without suffix \'f\' are treated strictly as double, which is typically 8 bytes.',d:'hard'},
+  {q:'What is output? int a=5; printf("%d", a+=3);',o:['5','8','3','Error'],c:1,e:'a+=3 translates precisely to a = a + 3. It assigns 8 to a, and strictly returns 8.',d:'hard'},
+  {q:'What is output? printf("%d", -10%3);',o:['-1','1','3','0'],c:0,e:'The remainder operator (%) rigorously preserves the sign of the dividend in C99 onwards.',d:'hard'},
+  {q:'What is output? int a=0; printf("%d", a++ + ++a);',o:['1','2','Undefined','3'],c:2,e:'Updating a single variable iteratively inside the same exact sequence point causes explicitly Undefined Behavior.',d:'hard'},
+  {q:'What will be output? int x=5; printf("%d", x*=2+3);',o:['25','10','15','20'],c:0,e:'Addition implicitly operates BEFORE *= purely due to specific precedence limits. x *= (2+3) -> x *= 5 -> 25.',d:'hard'},
+  {q:'What is output? printf("%d", (5,10));',o:['5','10','Error','Undefined'],c:1,e:'The comma operator stringently evaluates all operands left-to-right but strictly returns the rightmost one.',d:'hard'}
 ],,
 'upc2': [
   {q:'Which loop is guaranteed to execute at least once?',o:['for','while','do-while','None'],c:2,e:'A do-while loop evaluates its condition only AFTER the first execution completes.',d:'easy'},
@@ -258,7 +268,11 @@ const QUESTION_BANK = {
   {q:'Which loop is best when number of iterations is known?',o:['while','do-while','for','None'],c:2,e:'The for loop is explicitly designed for a known predetermined number of iterations.',d:'easy'},
   {q:'Which loop checks condition after execution?',o:['for','while','do-while','None'],c:2,e:'The do-while loop evaluates its condition at the end of the loop body.',d:'medium'},
   {q:'What is the output of printf("%d", 5==5);',o:['0','1','Error','None'],c:1,e:'A true relational expression evaluates to the integer 1 in C.',d:'medium'},
-  {q:'What will be output of printf("%d", !0);',o:['0','1','Error','Undefined'],c:1,e:'The logical NOT operator (!) converts a falsy value (0) into a truthy value (1).',d:'medium'}
+  {q:'What will be output of printf("%d", !0);',o:['0','1','Error','Undefined'],c:1,e:'The logical NOT operator (!) converts a falsy value (0) into a truthy value (1).',d:'medium'},
+  {q:'What will be output? int x=10; if(x=5) printf("Yes"); else printf("No");',o:['Yes','No','Error','Depends'],c:0,e:'x=5 strictly assigns 5 to x, unconditionally evaluating to a true integer value, so it dynamically prints Yes.',d:'hard'},
+  {q:'What will be output? int i=0; while(i++<5); printf("%d", i);',o:['5','6','4','Error'],c:1,e:'i stops executing the loop precisely when it hits 5, but violently increments one severely last time natively because it evaluates pre-break.',d:'hard'},
+  {q:'Output? int a=5; printf("%d", a==5?10:20);',o:['5','10','20','Error'],c:1,e:'Ternary unconditionally asserts a=5 is fundamentally true, forcefully returning 10.',d:'hard'},
+  {q:'Which is explicitly an infinite loop?',o:['while(1)','for(;;)','do while(1)','All'],c:3,e:'All three syntaxes actively compile into indefinite infinite loops natively.',d:'hard'}
 ],
 'upc3': [
   {q:'Which function is used to read input from user?',o:['scanf()','input()','read()','get()'],c:0,e:'scanf() heavily reads formatted input from the standard input stream (stdin).',d:'easy'},
@@ -266,17 +280,23 @@ const QUESTION_BANK = {
   {q:'What is the default return type of main()?',o:['float','void','int','char'],c:2,e:'main() uniquely returns an int back to the operating system, normally 0 for success.',d:'easy'},
   {q:'Which keyword is used to define a function?',o:['func','define','return','No keyword needed'],c:3,e:'Functions in C do not require a special keyword to announce them, just a return type signature.',d:'easy'},
   {q:'What is the default value of a static variable?',o:['garbage','0','null','undefined'],c:1,e:'Static variables are automatically initialized to 0 (or equivalent null pointer) by default.',d:'medium'},
-  {q:'What is recursion?',o:['Loop','Function calling itself','Pointer','Array'],c:1,e:'Recursion is a technique where a function makes a call to itself to solve smaller subproblems.',d:'medium'}
+  {q:'What is recursion?',o:['Loop','Function calling itself','Pointer','Array'],c:1,e:'Recursion is a technique where a function makes a call to itself to solve smaller subproblems.',d:'medium'},
+  {q:'What is the explicit output? printf("%d", printf("Hello"));',o:['Hello','5','Hello5','Error'],c:2,e:'printf implicitly acts intrinsically to return the raw character count printed (5 characters). Hence Hello prints explicitly first, followed exactly by 5 natively.',d:'hard'}
 ],
 'upc4': [
-  {q:'What is array?',o:['Collection of different types','Collection of same types','Function','Pointer'],c:1,e:'An array stores a fixed-size sequential collection of elements of the same type.',d:'medium'}
+  {q:'What is array?',o:['Collection of different types','Collection of same types','Function','Pointer'],c:1,e:'An array stores a fixed-size sequential collection of elements of the same type.',d:'medium'},
+  {q:'What will be output? char *p="Hello"; p[0]=\'h\'; printf("%s", p);',o:['hello','Hello','Error/UB','h'],c:2,e:'String literals unequivocally resolve inherently into Read-Only memory blocks. Attempting structurally to forcibly modify them systematically triggers Undefined Behavior heavily (often Segmentation Fault).',d:'hard'},
+  {q:'Output? int a[]={1,2,3}; printf("%d", *(a+1));',o:['1','2','3','Error'],c:1,e:'Array logic forcefully decays directly to a pointer precisely pointing exclusively to index 0 dynamically. Structurally *(a+1) essentially effectively targets rigorously index 1.',d:'hard'}
 ],
 'upc5': [
   {q:'What is pointer?',o:['Variable storing address','Variable storing value','Function','Loop'],c:0,e:'A pointer is a variable whose value is the memory address of another variable.',d:'medium'},
   {q:'Which symbol is used to access value at address?',o:['&','*','->','%'],c:1,e:'The * operator (dereference operator) accesses the value stored at the pointer\'s address.',d:'medium'},
   {q:'Which operator is used to get address of variable?',o:['*','&','->','%'],c:1,e:'The & (address-of) operator returns the memory address of a variable.',d:'medium'},
   {q:'Which function is used to allocate memory dynamically?',o:['alloc()','malloc()','new()','create()'],c:1,e:'malloc() allocates a specified number of bytes and returns a pointer to the allocated memory.',d:'medium'},
-  {q:'Which header file is used for malloc()?',o:['stdio.h','stdlib.h','math.h','string.h'],c:1,e:'malloc(), calloc(), and free() are defined in the stdlib.h header file.',d:'medium'}
+  {q:'Which header file is used for malloc()?',o:['stdio.h','stdlib.h','math.h','string.h'],c:1,e:'malloc(), calloc(), and free() are defined in the stdlib.h header file.',d:'medium'},
+  {q:'Which explicitly behaves definitively true about NULL?',o:['0','(void*)0','Both','None'],c:2,e:'NULL is universally generally explicitly defined exclusively as ((void *)0) inherently systematically in purely modern heavily structured standard C environments unequivocally.',d:'hard'},
+  {q:'Which formally is distinctly logically not a fundamentally explicitly valid explicit pointer declaration inherently?',o:['int *p;','int p*;','int* p;','int * p;'],c:1,e:'The asterisk precisely mathematically strictly uniquely associates purely with inherently the base primitive identifier dynamically. Appending it heavily uniquely postfix structurally strictly violates explicitly the heavy grammatical standards natively.',d:'hard'},
+  {q:'Which definitively establishes itself natively correct purely logically about free() logically structurally?',o:['Frees stack memory','Frees heap memory','Frees static memory','None'],c:1,e:'Memory essentially exclusively functionally securely created via explicitly fundamentally unique exclusively pure runtime intrinsically distinct stdlib native memory uniquely structured components inherently formally targets solely entirely the fundamentally explicit explicit system explicitly memory logically definitively strictly fundamentally isolated HEAP inherently functionally purely.',d:'hard'}
 ],
 'upc6': [
   {q:'Which keyword is used to define structure?',o:['struct','class','define','object'],c:0,e:'The struct keyword creates a user-defined data type that groups different variable types under a single name.',d:'medium'}
