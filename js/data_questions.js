@@ -259,7 +259,7 @@ const QUESTION_BANK = {
   {q:'What is output? int a=0; printf("%d", a++ + ++a);',o:['1','2','Undefined','3'],c:2,e:'Updating a single variable iteratively inside the same exact sequence point causes explicitly Undefined Behavior.',d:'hard'},
   {q:'What will be output? int x=5; printf("%d", x*=2+3);',o:['25','10','15','20'],c:0,e:'Addition implicitly operates BEFORE *= purely due to specific precedence limits. x *= (2+3) -> x *= 5 -> 25.',d:'hard'},
   {q:'What is output? printf("%d", (5,10));',o:['5','10','Error','Undefined'],c:1,e:'The comma operator stringently evaluates all operands left-to-right but strictly returns the rightmost one.',d:'hard'}
-],,
+],
 'upc2': [
   {q:'Which loop is guaranteed to execute at least once?',o:['for','while','do-while','None'],c:2,e:'A do-while loop evaluates its condition only AFTER the first execution completes.',d:'easy'},
   {q:'Which keyword is used for decision making?',o:['loop','if','case','break'],c:1,e:'The "if" keyword establishes the primary decision-making branch.',d:'easy'},
