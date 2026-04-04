@@ -240,20 +240,46 @@ const QUESTION_BANK = {
   {q:'What will printf("%d", 5+3); output?',o:['53','8','5+3','Error'],c:1,e:'The expression 5+3 is evaluated by the compiler to 8 before printing.',d:'easy'},
   {q:'Which operator is used for assignment?',o:['==','=',':=','!='],c:1,e:'A single = assigns value, whereas double == checks for equality.',d:'easy'},
   {q:'Which data type is used to store a single character?',o:['int','float','char','double'],c:2,e:'The char data type is used exclusively to store single characters.',d:'easy'},
-  {q:'Which symbol is used for comments in C (single line)?',o:['#','//','/* */','--'],c:1,e:'// is used for single-line comments.',d:'easy'}
-],
+  {q:'Which symbol is used for comments in C (single line)?',o:['#','//','/* */','--'],c:1,e:'// is used for single-line comments.',d:'easy'},
+  {q:'What will be the output of printf("%d", sizeof(char));?',o:['1','2','4','Depends'],c:0,e:'The size of a char is exactly 1 byte in C.',d:'medium'},
+  {q:'Which of the following is not a storage class?',o:['auto','register','static','volatile'],c:3,e:'volatile is a type qualifier, not a storage class specifier like auto, register, or static.',d:'medium'},
+  {q:'What will ++i do?',o:['Increment after use','Increment before use','No change','Error'],c:1,e:'++i is the pre-increment operator. It increments the variable first before yielding its value.',d:'medium'},
+  {q:'Which operator has highest precedence?',o:['+','*','()','='],c:2,e:'Parentheses () have the highest priority in the C operator precedence table.',d:'medium'},
+  {q:'What is the result of 10/3 in C?',o:['3.33','3','4','Error'],c:1,e:'Integer division truncates the decimal portion, resulting in 3.',d:'medium'},
+  {q:'Which keyword is used to prevent modification of a variable?',o:['const','static','volatile','register'],c:0,e:'const declares a variable as read-only.',d:'medium'},
+  {q:'What will be the output of printf("%d", 2*3+4);',o:['10','14','12','8'],c:0,e:'Multiplication has higher precedence than addition: 2*3 = 6, 6+4 = 10.',d:'medium'},
+  {q:'What will be output of int x=5; printf("%d", x++);',o:['5','6','Error','4'],c:0,e:'x++ evaluates to the current value (5), then increments x to 6.',d:'medium'}
+],,
 'upc2': [
   {q:'Which loop is guaranteed to execute at least once?',o:['for','while','do-while','None'],c:2,e:'A do-while loop evaluates its condition only AFTER the first execution completes.',d:'easy'},
   {q:'Which keyword is used for decision making?',o:['loop','if','case','break'],c:1,e:'The "if" keyword establishes the primary decision-making branch.',d:'easy'},
   {q:'Which operator is used for comparison?',o:['=','==',':=','->'],c:1,e:'== is the logical equality comparison operator.',d:'easy'},
   {q:'Which operator is used for logical AND?',o:['&','&&','AND','||'],c:1,e:'&& is logical AND, whereas & is bitwise AND.',d:'easy'},
-  {q:'Which loop is best when number of iterations is known?',o:['while','do-while','for','None'],c:2,e:'The for loop is explicitly designed for a known predetermined number of iterations.',d:'easy'}
+  {q:'Which loop is best when number of iterations is known?',o:['while','do-while','for','None'],c:2,e:'The for loop is explicitly designed for a known predetermined number of iterations.',d:'easy'},
+  {q:'Which loop checks condition after execution?',o:['for','while','do-while','None'],c:2,e:'The do-while loop evaluates its condition at the end of the loop body.',d:'medium'},
+  {q:'What is the output of printf("%d", 5==5);',o:['0','1','Error','None'],c:1,e:'A true relational expression evaluates to the integer 1 in C.',d:'medium'},
+  {q:'What will be output of printf("%d", !0);',o:['0','1','Error','Undefined'],c:1,e:'The logical NOT operator (!) converts a falsy value (0) into a truthy value (1).',d:'medium'}
 ],
 'upc3': [
   {q:'Which function is used to read input from user?',o:['scanf()','input()','read()','get()'],c:0,e:'scanf() heavily reads formatted input from the standard input stream (stdin).',d:'easy'},
   {q:'Which keyword is used to return a value from a function?',o:['break','return','exit','stop'],c:1,e:'The return statement stops execution inside the function block and returns the specified value.',d:'easy'},
   {q:'What is the default return type of main()?',o:['float','void','int','char'],c:2,e:'main() uniquely returns an int back to the operating system, normally 0 for success.',d:'easy'},
-  {q:'Which keyword is used to define a function?',o:['func','define','return','No keyword needed'],c:3,e:'Functions in C do not require a special keyword to announce them, just a return type signature.',d:'easy'}
+  {q:'Which keyword is used to define a function?',o:['func','define','return','No keyword needed'],c:3,e:'Functions in C do not require a special keyword to announce them, just a return type signature.',d:'easy'},
+  {q:'What is the default value of a static variable?',o:['garbage','0','null','undefined'],c:1,e:'Static variables are automatically initialized to 0 (or equivalent null pointer) by default.',d:'medium'},
+  {q:'What is recursion?',o:['Loop','Function calling itself','Pointer','Array'],c:1,e:'Recursion is a technique where a function makes a call to itself to solve smaller subproblems.',d:'medium'}
+],
+'upc4': [
+  {q:'What is array?',o:['Collection of different types','Collection of same types','Function','Pointer'],c:1,e:'An array stores a fixed-size sequential collection of elements of the same type.',d:'medium'}
+],
+'upc5': [
+  {q:'What is pointer?',o:['Variable storing address','Variable storing value','Function','Loop'],c:0,e:'A pointer is a variable whose value is the memory address of another variable.',d:'medium'},
+  {q:'Which symbol is used to access value at address?',o:['&','*','->','%'],c:1,e:'The * operator (dereference operator) accesses the value stored at the pointer\'s address.',d:'medium'},
+  {q:'Which operator is used to get address of variable?',o:['*','&','->','%'],c:1,e:'The & (address-of) operator returns the memory address of a variable.',d:'medium'},
+  {q:'Which function is used to allocate memory dynamically?',o:['alloc()','malloc()','new()','create()'],c:1,e:'malloc() allocates a specified number of bytes and returns a pointer to the allocated memory.',d:'medium'},
+  {q:'Which header file is used for malloc()?',o:['stdio.h','stdlib.h','math.h','string.h'],c:1,e:'malloc(), calloc(), and free() are defined in the stdlib.h header file.',d:'medium'}
+],
+'upc6': [
+  {q:'Which keyword is used to define structure?',o:['struct','class','define','object'],c:0,e:'The struct keyword creates a user-defined data type that groups different variable types under a single name.',d:'medium'}
 ],
 
 // C++ PROGRAMMING
