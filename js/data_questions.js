@@ -228,17 +228,32 @@ const QUESTION_BANK = {
 ],
 
 // ============= UNIVERSITY: PROGRAMMING & CS =============
-// C PROGRAMMING
+// C PROGRAMMING (Custom User Data)
 'upc1': [
-  {q:'What is the output?\n#include <stdio.h>\nint main() { int x = 5; printf("%d", x++ + ++x); return 0; }',o:['Undefined Behavior','11','13','12'],c:0,e:'Modifying a variable multiple times within the same sequence point leads to undefined behavior in C.',d:'hard'},
-  {q:'Evaluate the C code:\nchar str[] = "Hello";\nprintf("%lu", sizeof(str));',o:['6','5','8','4'],c:0,e:'sizeof() includes the null terminator \\0, so 5 characters + 1 = 6.',d:'medium'},
-  {q:'Which of the following creates a strict constant in C that cannot be modified via pointers without invoking undefined behavior?',o:['const int x = 5;','#define x 5','int const x = 5;','All of the above'],c:0,e:'Using the const keyword declares a true constant in memory. #define is just text substitution.',d:'medium'},
-  {q:'What does the "register" storage class guarantee?',o:['Nothing, it is merely a hint to the compiler','The variable is stored in CPU registers','Faster access time','No memory address exists'],c:0,e:'It only hints the compiler to store the variable in a register, but modern compilers optimize this automatically.',d:'easy'},
-  {q:'What is printed?\nint a=0; if(a++) printf("True"); else printf("False");',o:['False','True','Compile Error','0'],c:0,e:'Post-increment evaluates `a` (which is 0, falsy) before incrementing, jumping to the else block.',d:'medium'}
+  {q:'What is the correct extension of a C file?',o:['.cpp','.java','.c','.py'],c:2,e:'C source files definitively use the .c extension.',d:'easy'},
+  {q:'Which function is used to print output in C?',o:['input()','print()','printf()','display()'],c:2,e:'printf() is the standard formatted output function in C.',d:'easy'},
+  {q:'Which symbol is used to end a statement in C?',o:[':',';','.','comma'],c:1,e:'Every C statement must legally end with a semicolon.',d:'easy'},
+  {q:'Which of the following is a valid C variable name?',o:['1num','num_1','num-1','num 1'],c:1,e:'Variable names cannot start with a number and cannot contain spaces or hyphens (-).',d:'easy'},
+  {q:'Which header file is required for printf()?',o:['stdlib.h','string.h','stdio.h','math.h'],c:2,e:'stdio.h is the Standard Input/Output header file needed for printing.',d:'easy'},
+  {q:'What is the size of int (typically)?',o:['2 bytes','4 bytes','8 bytes','Depends on compiler'],c:1,e:'While technically compiler-dependent, it is universally considered 4 bytes in modern 32/64 bit systems.',d:'easy'},
+  {q:'Which keyword is used to define a constant in C?',o:['const','define','static','final'],c:0,e:'The const keyword prevents a variable from being modified later in the code.',d:'easy'},
+  {q:'What will printf("%d", 5+3); output?',o:['53','8','5+3','Error'],c:1,e:'The expression 5+3 is evaluated by the compiler to 8 before printing.',d:'easy'},
+  {q:'Which operator is used for assignment?',o:['==','=',':=','!='],c:1,e:'A single = assigns value, whereas double == checks for equality.',d:'easy'},
+  {q:'Which data type is used to store a single character?',o:['int','float','char','double'],c:2,e:'The char data type is used exclusively to store single characters.',d:'easy'},
+  {q:'Which symbol is used for comments in C (single line)?',o:['#','//','/* */','--'],c:1,e:'// is used for single-line comments.',d:'easy'}
 ],
-'upc5': [
-  {q:'What will happen?\nint *p = NULL;\nprintf("%d", *p);',o:['Segmentation Fault','0','NullReferenceException','Compile Error'],c:0,e:'Dereferencing a NULL pointer immediately causes a segmentation fault in C.',d:'easy'},
-  {q:'What is the purpose of realloc()?',o:['To resize previously allocated dynamic memory','To free memory','To allocate uninitialized memory','To clear memory'],c:0,e:'realloc expands or shrinks dynamically allocated memory blocks while preserving data.',d:'easy'}
+'upc2': [
+  {q:'Which loop is guaranteed to execute at least once?',o:['for','while','do-while','None'],c:2,e:'A do-while loop evaluates its condition only AFTER the first execution completes.',d:'easy'},
+  {q:'Which keyword is used for decision making?',o:['loop','if','case','break'],c:1,e:'The "if" keyword establishes the primary decision-making branch.',d:'easy'},
+  {q:'Which operator is used for comparison?',o:['=','==',':=','->'],c:1,e:'== is the logical equality comparison operator.',d:'easy'},
+  {q:'Which operator is used for logical AND?',o:['&','&&','AND','||'],c:1,e:'&& is logical AND, whereas & is bitwise AND.',d:'easy'},
+  {q:'Which loop is best when number of iterations is known?',o:['while','do-while','for','None'],c:2,e:'The for loop is explicitly designed for a known predetermined number of iterations.',d:'easy'}
+],
+'upc3': [
+  {q:'Which function is used to read input from user?',o:['scanf()','input()','read()','get()'],c:0,e:'scanf() heavily reads formatted input from the standard input stream (stdin).',d:'easy'},
+  {q:'Which keyword is used to return a value from a function?',o:['break','return','exit','stop'],c:1,e:'The return statement stops execution inside the function block and returns the specified value.',d:'easy'},
+  {q:'What is the default return type of main()?',o:['float','void','int','char'],c:2,e:'main() uniquely returns an int back to the operating system, normally 0 for success.',d:'easy'},
+  {q:'Which keyword is used to define a function?',o:['func','define','return','No keyword needed'],c:3,e:'Functions in C do not require a special keyword to announce them, just a return type signature.',d:'easy'}
 ],
 
 // C++ PROGRAMMING
