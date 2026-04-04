@@ -21,6 +21,27 @@ function randomizeOptions(q) {
   return { ...q, o: newOptions, c: newCorrect };
 }
 
+const Q_TEMPLATES = [
+  "Which of the following best defines the core principle of {topic}?",
+  "What is the primary function or significance of {topic}?",
+  "In the context of {topic}, which of the following is generally considered true?",
+  "Which concept is most frequently associated with the study of {topic}?",
+  "How is {topic} most commonly applied in practical scenarios?",
+  "Which of the following represents a common challenge involving {topic}?",
+  "What is a fundamental characteristic that distinguishes {topic}?",
+  "When analyzing {topic}, what is a critical factor to prioritize?",
+  "Which methodology is most commonly aligned with {topic}?",
+  "What is the ultimate goal or objective of understanding {topic}?"
+];
+
+const O_TEMPLATES = [
+  ["The primary structural concept", "An outdated methodology", "A secondary attribute", "An unrelated framework"],
+  ["The foundational theory", "A common misconception", "An experimental hypothesis", "An irrelevant variable"],
+  ["The optimal standardized approach", "A deprecated practice", "A theoretical alternative", "A non-standard method"],
+  ["The core operational mechanism", "A peripheral component", "A redundant system", "An independent module"],
+  ["The main driving factor", "A minor influencing variable", "An opposing viewpoint", "A historical context"]
+];
+
 // Utility: Auto-generate placeholders for missing questions
 function generatePlaceholders(topicId, courseId, difficulty, neededCount) {
   const allCourses = [...SCHOOL_COURSES, ...UNI_COURSES];
@@ -30,16 +51,14 @@ function generatePlaceholders(topicId, courseId, difficulty, neededCount) {
 
   const placeholders = [];
   for (let i = 0; i < neededCount; i++) {
+    const qText = Q_TEMPLATES[(i + topicId.length) % Q_TEMPLATES.length].replace('{topic}', topicName);
+    const oText = O_TEMPLATES[(i + topicId.length) % O_TEMPLATES.length];
+    
     placeholders.push({
-      question: `Which of the following best relates to the core principles of ${topicName}?`,
-      options: [
-        `The primary structural or theoretical foundation of ${topicName}`,
-        `An outdated methodology previously associated with this topic`,
-        `A secondary attribute often confused with the main concept`,
-        `An unrelated framework from a different subject area`
-      ],
+      question: `(${difficulty.toUpperCase()}) ${qText}`,
+      options: [...oText],
       correct: 0,
-      explanation: `This is an auto-generated placeholder. Real questions for ${topicName} will be added in a future update.`,
+      explanation: `This is an auto-generated placeholder. Real questions for ${topicName} will be added in a future dataset update.`,
       difficulty: difficulty,
       topicId: topicId,
       courseId: courseId
@@ -209,6 +228,27 @@ const QUESTION_BANK = {
   {q:'Which of the following loops is guaranteed to execute at least once?',o:['do-while loop','while loop','for loop','for-each loop'],c:0,e:'A do-while loop evaluates its condition after execution, ensuring at least one run.',d:'medium'},
   {q:'What does the "auto" keyword do in modern C++?',o:['Deduces the type of a variable from its initializer','Automatically allocates memory','Destroys a variable automatically','Declares a global variable'],c:0,e:'Introduced in C++11, auto tells the compiler to infer the type from the initializer.',d:'medium'},
   {q:'What is the difference between passing by value and passing by reference?',o:['Reference directly modifies the original variable, value creates a copy','Value modifies the original, reference copies','There is no difference in C++','References cannot be used in functions'],c:0,e:'Passing by reference uses memory addresses so original variables are modified.',d:'hard'},
+],
+'ucp2': [
+  {q:'Which paradigm does C++ primarily support alongside procedural programming?',o:['Object-Oriented Programming','Functional Programming','Logic Programming','Declarative Programming'],c:0,e:'C++ was originally C with Classes, heavily emphasizing Object-Oriented Programming.',d:'easy'},
+  {q:'In C++, what are the default access modifiers for a "class" and a "struct"?',o:['class: private, struct: public','class: public, struct: private','class: protected, struct: public','class: private, struct: protected'],c:0,e:'By default, all members of a class are private, while struct members are public.',d:'medium'},
+  {q:'What is polymorphism in C++?',o:['The ability of different objects to respond to the same function call in their own way','Hiding internal implementation details','Creating multiple objects of the same class','Inheriting from multiple base classes'],c:0,e:'Polymorphism (often implemented via virtual functions) allows overriding behavior in derived classes.',d:'medium'},
+  {q:'Which keyword prevents a class from being inherited in C++11?',o:['final','sealed','static','const'],c:0,e:'The "final" keyword stops a virtual function from being overridden or a class from being inherited.',d:'hard'},
+  {q:'What happens if a class does not have an explicitly defined constructor?',o:['The compiler generates a default constructor automatically','The code will fail to compile','Memory will not be allocated for the object','The destructor is also deleted'],c:0,e:'If no constructors are defined, C++ automatically creates a default (no-arg) constructor.',d:'easy'},
+],
+'ucp3': [
+  {q:'Which operator is used to allocate exact dynamic memory in C++?',o:['new','malloc()','alloc','create'],c:0,e:'The "new" keyword allocates memory for an object and calls its constructor.',d:'easy'},
+  {q:'What problem occurs if dynamically allocated memory is never freed?',o:['Memory leak','Stack overflow','Segmentation fault','Race condition'],c:0,e:'A memory leak happens when heap memory is allocated but never deallocated with "delete".',d:'easy'},
+  {q:'Which smart pointer allows multiple pointers to own the same memory?',o:['std::shared_ptr','std::unique_ptr','std::weak_ptr','std::auto_ptr'],c:0,e:'shared_ptr keeps a reference count and deletes the memory only when the count hits zero.',d:'medium'},
+  {q:'What is a dangling pointer?',o:['A pointer pointing to a memory location that has been deleted','An uninitialized pointer','A pointer pointing to a null value','A pointer to a constant value'],c:0,e:'If memory is freed but the pointer is still used, it becomes a dangling pointer.',d:'hard'},
+  {q:'What is the correct way to delete an array allocated with "new int[10]"?',o:['delete[] ptr;','delete ptr;','free(ptr);','remove ptr;'],c:0,e:'Use delete[] to correctly invoke destructors and free memory for an array.',d:'medium'},
+],
+'ucp4': [
+  {q:'What does STL stand for in C++?',o:['Standard Template Library','Simple Type Language','Static Testing Layer','Synchronous Task Library'],c:0,e:'The Standard Template Library provides generic classes and functions like vectors and iterators.',d:'easy'},
+  {q:'Which STL container provides a dynamic array that grows automatically?',o:['std::vector','std::list','std::deque','std::set'],c:0,e:'std::vector stores memory contiguously and resizes itself when necessary.',d:'easy'},
+  {q:'What is a feature of std::map ?',o:['It stores key-value pairs sorted by key','It stores elements continuously in memory','It only allows unique integer values','It is faster than std::unordered_map for lookups'],c:0,e:'A map uses a balanced tree mechanism to store key-value pairs in sorted order.',d:'medium'},
+  {q:'Why are templates useful in C++?',o:['They allow writing generic functions and classes for different data types','They speed up application runtime execution significantly','They hide memory leaks automatically','They restrict variable types strictly'],c:0,e:'Templates enable type-safe, generic programming without duplicating code for different types.',d:'medium'},
+  {q:'What does the STL algorithm "std::sort" use under the hood?',o:['IntroSort (a mix of QuickSort, HeapSort, InsertionSort)','BubbleSort','MergeSort only','SelectionSort'],c:0,e:'Most standard libraries implement IntroSort for std::sort giving O(n log n) performance.',d:'hard'},
 ],
 'uds1': [
   {q:'Array access by index is:',o:['O(n)','O(log n)','O(1)','O(n²)'],c:2,e:'Direct index = O(1) constant time.',d:'easy'},
