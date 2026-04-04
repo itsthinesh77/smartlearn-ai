@@ -304,6 +304,12 @@ const QUESTION_BANK = {
 
 // C++ PROGRAMMING
 'ucpp1': [
+  {q:'What is the output?\nint x=5; cout<<x++;',o:['5','6','Error','4'],c:0,e:'x++ is a post-increment operator, so it prints the current value 5 before incrementing.',d:'medium'},
+  {q:'What is the output?\ncout<<2+3*4;',o:['20','14','10','24'],c:1,e:'Multiplication (*) has higher precedence than addition (+), so 3*4=12, plus 2 equals 14.',d:'medium'},
+  {q:'What is output?\nint a=10; cout<<--a;',o:['9','10','11','Error'],c:0,e:'--a is a pre-decrement operator, so it decrements a to 9 before printing.',d:'medium'},
+  {q:'What is output?\nint x=5; cout<<(x==5);',o:['0','1','5','Error'],c:1,e:'x==5 evaluates to true, which prints as 1 in C++.',d:'medium'},
+  {q:'Which keyword is used for constant variable?',o:['const','static','define','final'],c:0,e:'The const keyword makes a variable\'s value immutable.',d:'medium'},
+  {q:'What is output?\nint x=2; cout<<x*=(3+2);',o:['10','5','6','7'],c:0,e:'Parentheses evaluate first (3+2=5). Then x *= 5 translates to x = 2 * 5, which is 10.',d:'medium'},
   {q:'Which symbol is used to include header files in C++?',o:['#include','import','using','include'],c:0,e:'The #include preprocessor directive is used to include header files.',d:'easy'},
   {q:'Which of the following is a valid C++ comment?',o:['// comment','/* comment */','Both','None'],c:2,e:'C++ supports both single-line (//) and multi-line (/* */) comments.',d:'easy'},
   {q:'Which function is used for output in C++?',o:['printf()','cout','print()','display()'],c:1,e:'cout is the standard output stream object in C++.',d:'easy'},
@@ -321,6 +327,19 @@ const QUESTION_BANK = {
   {q:'What is the output of this array indexing trick?\n\nint arr[] = {1, 2, 3};\ncout << 1[arr];',o:['2','1','3','Syntax Error'],c:0,e:'`1[arr]` is perfectly valid in C++ and equivalent to `arr[1]` due to pointer arithmetic ( *(1 + arr) ). The element at index 1 is 2.',d:'hard'},
 ],
 'ucpp2': [
+  {q:'Which concept allows multiple functions with same name?',o:['Inheritance','Overloading','Encapsulation','Abstraction'],c:1,e:'Function overloading allows functions with the same name but different signatures.',d:'medium'},
+  {q:'Which operator is used to access class members using pointer?',o:['.','::','->','&'],c:2,e:'The arrow operator (->) dereferences the pointer to access members.',d:'medium'},
+  {q:'What is constructor?',o:['Special function','Variable','Loop','Class'],c:0,e:'A constructor is a special member function automatically called during object instantiation.',d:'medium'},
+  {q:'Default constructor has?',o:['Arguments','No arguments','One argument','Two arguments'],c:1,e:'A default constructor is one that has no arguments or whose arguments all have defaults.',d:'medium'},
+  {q:'Which keyword is used for polymorphism?',o:['virtual','static','const','friend'],c:0,e:'The virtual keyword is used in the base class to enable runtime polymorphism.',d:'medium'},
+  {q:'Which feature is not part of OOP?',o:['Encapsulation','Polymorphism','Compilation','Inheritance'],c:2,e:'Compilation is a programming language translation step, not an OOP concept.',d:'medium'},
+  {q:'Which function is called automatically when object is created?',o:['Destructor','Constructor','main','display'],c:1,e:'The constructor is inherently called upon instantiation.',d:'medium'},
+  {q:'What is destructor?',o:['Deletes object','Special function','Loop','Pointer'],c:1,e:'A destructor is a special function invoked automatically when an object goes out of scope.',d:'medium'},
+  {q:'Which keyword is used to inherit class?',o:['inherits',':','extends','derive'],c:1,e:'The colon (:) establishes inheritance, e.g., class Derived : public Base',d:'medium'},
+  {q:'Which type of inheritance has one base and many derived?',o:['Single','Multiple','Hierarchical','Multilevel'],c:2,e:'Hierarchical inheritance features multiple derived classes stemming from one base class.',d:'medium'},
+  {q:'What is friend function?',o:['Member function','Non-member with access','Private function','Loop'],c:1,e:'A friend function is essentially an external function granted access to a class\'s private data.',d:'medium'},
+  {q:'Which operator is overloaded?',o:['+','-','*','All'],c:3,e:'Standard arithmetic operators can all be safely overloaded in C++.',d:'medium'},
+  {q:'What is virtual function?',o:['Static function','Runtime polymorphism','Compile-time','None'],c:1,e:'Virtual functions primarily facilitate runtime abstract polymorphism via vtables.',d:'medium'},
   {q:'Which keyword is used to define a class?',o:['struct','class','object','define'],c:1,e:'The class keyword is used to declare a new class object type.',d:'easy'},
   {q:'Which keyword is used for inheritance?',o:['inherit','extends',':','using'],c:2,e:'The colon (:) is used to inherit from a base class in C++.',d:'easy'},
   {q:'What is the default access specifier in a class?',o:['public','private','protected','default'],c:1,e:'By default, all members of a struct are public, but all members of a class are private.',d:'easy'},
@@ -345,6 +364,7 @@ const QUESTION_BANK = {
   {q:'What does "Placement new" achieve in advanced C++?',o:['It invokes an object constructor on a specific, pre-allocated memory address.','It forces memory allocation to happen on the CPU cache.','It provides automatic garbage collection for legacy code.','It places an object perfectly into a C++ STL container.'],c:0,e:'Syntax: `new (pointer) Object()`. It constructs the object in pre-allocated buffers, highly useful in game engines and custom allocators.',d:'hard'},
 ],
 'ucpp5': [
+  {q:'Which container is part of STL?',o:['vector','array','stack','All'],c:3,e:'vector, array, and stack are all standard container classes inside the Standard Template Library (STL).',d:'medium'},
   {q:'What will the following code output regarding the vector state?\n\nstd::vector<int> v = {1, 2, 3};\nv.push_back(4);\ncout << v.size();',o:['4','3','6','Compile Error'],c:0,e:'Adding the 4th element increases the size (number of valid elements) to 4.',d:'easy'},
   {q:'Which internal data structure is the C++ STL `std::map` normally built upon to maintain sorted key-value pairs?',o:['Self-balancing Binary Search Tree (e.g., Red-Black tree)','Contiguous Array','Hash Table','Doubly Linked List'],c:0,e:'`std::map` guarantees O(log N) operations and ordered keys by using a self-balancing BST.',d:'medium'},
   {q:'What is the output of the following C++11 Lambda function?\n\nauto compute = [](int x) { return x * 2; };\ncout << compute(3);',o:['6','3','Syntax Error','0'],c:0,e:'The lambda captures no variables (`[]`), takes `x`, and returns `x*2`. Passing 3 correctly outputs 6.',d:'easy'},
