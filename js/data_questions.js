@@ -327,6 +327,8 @@ const QUESTION_BANK = {
   {q:'What is the output of this array indexing trick?\n\nint arr[] = {1, 2, 3};\ncout << 1[arr];',o:['2','1','3','Syntax Error'],c:0,e:'`1[arr]` is perfectly valid in C++ and equivalent to `arr[1]` due to pointer arithmetic ( *(1 + arr) ). The element at index 1 is 2.',d:'hard'},
 ],
 'ucpp2': [
+  {q:'Which is true about virtual functions?',o:['Compile-time binding','Runtime binding','No binding','Static'],c:1,e:'Virtual functions use v-tables for accurate runtime polymorphic binding.',d:'hard'},
+  {q:'Which operator cannot be overloaded?',o:['+','::','*','-'],c:1,e:'The scope resolution operator (::) cannot be overloaded in C++.',d:'hard'},
   {q:'Which concept allows multiple functions with same name?',o:['Inheritance','Overloading','Encapsulation','Abstraction'],c:1,e:'Function overloading allows functions with the same name but different signatures.',d:'medium'},
   {q:'Which operator is used to access class members using pointer?',o:['.','::','->','&'],c:2,e:'The arrow operator (->) dereferences the pointer to access members.',d:'medium'},
   {q:'What is constructor?',o:['Special function','Variable','Loop','Class'],c:0,e:'A constructor is a special member function automatically called during object instantiation.',d:'medium'},
@@ -354,6 +356,10 @@ const QUESTION_BANK = {
   {q:'What is the output of this static scope example?\n\nclass C { public: ~C(){ cout<<"D"; } };\nvoid func() { static C obj; }\nint main() {\n    func();\n    cout<<"M";\n    return 0;\n}',o:['MD','DM','Nothing is printed','Compile Error'],c:0,e:'`obj` is static. It gets created when `func()` is called, but is destroyed only when the program entirely exits (after main returns). So M prints, then D.',d:'hard'},
 ],
 'ucpp3': [
+  {q:'Which is not a valid pointer declaration?',o:['int *p;','int p*;','int* p;','int * p;'],c:1,e:'The asterisk must precede the identifier or follow the type.',d:'hard'},
+  {q:'What will be output?\nchar *p="Hello"; p[0]=\'h\'; cout<<p;',o:['hello','Hello','Undefined/Error','h'],c:2,e:'Modifying a read-only string literal triggers Segmentation Fault/Undefined Behavior.',d:'hard'},
+  {q:'Output?\nint a[]={1,2,3}; cout<<*(a+1);',o:['1','2','3','Error'],c:1,e:'Pointer arithmetic *(a+1) accesses index 1 of the array directly.',d:'hard'},
+  {q:'Which deletes dynamic memory?',o:['free()','delete','remove','clear'],c:1,e:'The `delete` keyword explicitly frees memory allocated by explicitly using `new`.',d:'hard'},
   {q:'Which operator is used for pointer?',o:['*','&','Both','None'],c:2,e:'The ampersand (&) gets the address, and the asterisk (*) dereferences the pointer.',d:'easy'},
   {q:'Which operator is used for dynamic memory allocation?',o:['malloc','alloc','new','create'],c:2,e:'While malloc works, the native C++ operator strictly for dynamic allocation is `new`.',d:'easy'},
   {q:'Which keyword is used to free memory?',o:['delete','free','remove','clear'],c:0,e:'Memory allocated with `new` must strictly be freed using the `delete` keyword.',d:'easy'},
@@ -394,6 +400,12 @@ const QUESTION_BANK = {
 
 // DATA STRUCTURES
 'uds1': [
+  {q:'What is the time complexity of searching in a balanced BST?',o:['O(n)','O(log n)','O(n log n)','O(1)'],c:1,e:'A balanced BST halves the search space iteratively, taking O(log n) time.',d:'hard'},
+  {q:'Which traversal gives sorted output in BST?',o:['Preorder','Postorder','Inorder','Level order'],c:2,e:'Inorder traversal processes Left, Node, Right, yielding sorted values natively.',d:'hard'},
+  {q:'What is the worst-case time complexity of quicksort?',o:['O(n log n)','O(n^2)','O(log n)','O(n)'],c:1,e:'Quicksort hits O(n^2) if the pivot is chosen poorly on already sorted arrays.',d:'hard'},
+  {q:'Which is stable sorting?',o:['Quick sort','Heap sort','Merge sort','Selection sort'],c:2,e:'Merge sort preserves relative order natively without jumping elements.',d:'hard'},
+  {q:'What is time complexity of binary search?',o:['O(n)','O(log n)','O(n log n)','O(1)'],c:1,e:'It divides the array in half each time.',d:'hard'},
+  {q:'What is time complexity of merge sort?',o:['O(n^2)','O(n log n)','O(log n)','O(n)'],c:1,e:'Merge sort systematically splits and merges arrays.',d:'hard'},
   {q:'What is the time complexity of appending to a dynamic array (like std::vector or list) that requires resizing?',o:['O(n) worst-case, O(1) amortized','O(1) strictly','O(log n)','O(n²)'],c:0,e:'Resizing means allocating a new array and copying elements (O(n)), but overall amortized over many appends, it averages to O(1).',d:'hard'},
   {q:'Identify the bug in trying to delete the tail of a Singly Linked List quickly without a tail pointer.',o:['You must traverse the entire list from the head to find the node before the tail.','Memory leak will occur if not cast properly.','It takes O(1) time consistently.','You cannot delete the tail.'],c:0,e:'Because you cannot traverse backwards in a SLL, you must go O(n) from the head to find the second-to-last node to sever the link.',d:'medium'},
   {q:'Array access by index is:',o:['O(n)','O(log n)','O(1)','O(n²)'],c:2,e:'Direct index = O(1) constant time.',d:'easy'},
@@ -402,6 +414,26 @@ const QUESTION_BANK = {
   {q:'Reversing a linked list takes:',o:['O(1)','O(n)','O(n²)','O(n log n)'],c:1,e:'Visit each node once = O(n).',d:'medium'},
   {q:'Time to search unsorted array of n elements:',o:['O(1)','O(log n)','O(n)','O(n²)'],c:2,e:'Linear search: check each element = O(n) worst case.',d:'easy'},
   {q:'Amortized cost of dynamic array append:',o:['O(1)','O(n)','O(log n)','O(n²)'],c:0,e:'Despite occasional resizing, amortized append is O(1).',d:'hard'},
+],
+'uds2': [
+  {q:'Which data structure is used for BFS?',o:['Stack','Queue','Tree','Graph'],c:1,e:'Breadth-First Search utilizes a Queue to track neighboring nodes level by level.',d:'hard'},
+  {q:'Which data structure is used for DFS?',o:['Queue','Stack','Array','Heap'],c:1,e:'Depth-First Search goes deep first, perfectly matched by the LIFO structure of a stack.',d:'hard'},
+  {q:'Which structure is used in recursion?',o:['Queue','Stack','Array','Tree'],c:1,e:'Recursion pushes states onto the system Call Stack.',d:'hard'},
+  {q:'Which traversal uses queue?',o:['DFS','BFS','Inorder','Preorder'],c:1,e:'Level-order traversal (BFS) processes nodes level-by-level using a Queue.',d:'hard'},
+  {q:'Which structure is used for expression evaluation?',o:['Queue','Stack','Tree','Graph'],c:1,e:'Postfix/Prefix expressions are evaluated optimally using a Stack.',d:'hard'},
+  {q:'What is time complexity of stack push?',o:['O(1)','O(log n)','O(n)','O(n log n)'],c:0,e:'Pushing simply updates the top pointer in O(1) constant time.',d:'hard'}
+],
+'uds3': [
+  {q:'What is the height of a complete binary tree with n nodes?',o:['log n','n','n log n','sqrt(n)'],c:0,e:'Its height is heavily bounded by log_2(n).',d:'hard'},
+  {q:'What is time complexity of inserting in heap?',o:['O(1)','O(log n)','O(n)','O(n log n)'],c:1,e:'Insertion requires a bubble-up operation scaling with the height of the tree O(log n).',d:'hard'},
+  {q:'Which is not a linear data structure?',o:['Array','Linked List','Tree','Stack'],c:2,e:'Trees contain branching recursive hierarchies, rendering them nonlinear natively.',d:'hard'},
+  {q:'Which data structure is used in Dijkstra?',o:['Stack','Queue','Priority Queue','Tree'],c:2,e:'Dijkstra dynamically selects the minimum path natively utilizing a Min-Heap/Priority Queue.',d:'hard'},
+  {q:'What is adjacency matrix space complexity?',o:['O(n)','O(n^2)','O(log n)','O(n log n)'],c:1,e:'A V*V matrix maps all possible vertices dynamically, storing exactly O(n^2) values.',d:'hard'},
+  {q:'Which algorithm is used for minimum spanning tree?',o:['Dijkstra','Kruskal','BFS','DFS'],c:1,e:'Kruskal expertly natively processes exclusively greedy edge sorting identically to formulate MSTs.',d:'hard'}
+],
+'uds4': [
+  {q:'Which collision technique uses linked list?',o:['Open addressing','Chaining','Linear probing','Quadratic probing'],c:1,e:'Chaining manages collisions inherently by dynamically pointing multiple elements to uniquely mapped external Linked Lists.',d:'hard'},
+  {q:'What is time complexity of deleting from hash table (avg)?',o:['O(1)','O(log n)','O(n)','O(n log n)'],c:0,e:'Average precisely evaluates consistently directly natively dynamically to exclusively essentially exactly purely strictly safely purely O(1).',d:'hard'}
 ],
 'uds5': [
   {q:'BFS uses which data structure?',o:['Stack','Queue','Heap','Tree'],c:1,e:'BFS uses a queue for level-order traversal.',d:'easy'},
