@@ -31,10 +31,15 @@ function generatePlaceholders(topicId, courseId, difficulty, neededCount) {
   const placeholders = [];
   for (let i = 0; i < neededCount; i++) {
     placeholders.push({
-      question: `(Placeholder) What is a key concept of ${topicName}?`,
-      options: ['Correct Answer', 'Distractor 1', 'Distractor 2', 'Distractor 3'],
+      question: `Which of the following best relates to the core principles of ${topicName}?`,
+      options: [
+        `The primary structural or theoretical foundation of ${topicName}`,
+        `An outdated methodology previously associated with this topic`,
+        `A secondary attribute often confused with the main concept`,
+        `An unrelated framework from a different subject area`
+      ],
       correct: 0,
-      explanation: `This is an auto-generated placeholder question because real questions for ${topicName} have not been added to the database yet.`,
+      explanation: `This is an auto-generated placeholder. Real questions for ${topicName} will be added in a future update.`,
       difficulty: difficulty,
       topicId: topicId,
       courseId: courseId
@@ -198,6 +203,13 @@ const QUESTION_BANK = {
 ],
 
 // ============= UNIVERSITY: CS =============
+'ucp1': [
+  {q:'Which of the following is the correct syntax to print "Hello World" in C++?',o:['cout << "Hello World";','print("Hello World");','System.out.println("Hello World");','Console.WriteLine("Hello World");'],c:0,e:'C++ uses the standard output stream cout with the insertion operator <<.',d:'easy'},
+  {q:'What is the size of an int data type in standard 32-bit/64-bit C++?',o:['Usually 4 bytes','Exactly 2 bytes','Depends on the OS, always 8 bytes','1 byte'],c:0,e:'In most modern architectures, an int is 4 bytes (32 bits).',d:'easy'},
+  {q:'Which of the following loops is guaranteed to execute at least once?',o:['do-while loop','while loop','for loop','for-each loop'],c:0,e:'A do-while loop evaluates its condition after execution, ensuring at least one run.',d:'medium'},
+  {q:'What does the "auto" keyword do in modern C++?',o:['Deduces the type of a variable from its initializer','Automatically allocates memory','Destroys a variable automatically','Declares a global variable'],c:0,e:'Introduced in C++11, auto tells the compiler to infer the type from the initializer.',d:'medium'},
+  {q:'What is the difference between passing by value and passing by reference?',o:['Reference directly modifies the original variable, value creates a copy','Value modifies the original, reference copies','There is no difference in C++','References cannot be used in functions'],c:0,e:'Passing by reference uses memory addresses so original variables are modified.',d:'hard'},
+],
 'uds1': [
   {q:'Array access by index is:',o:['O(n)','O(log n)','O(1)','O(n²)'],c:2,e:'Direct index = O(1) constant time.',d:'easy'},
   {q:'Linked list head insertion is:',o:['O(1)','O(n)','O(log n)','O(n²)'],c:0,e:'Just update head pointer — O(1).',d:'easy'},
