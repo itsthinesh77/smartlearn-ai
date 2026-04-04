@@ -227,36 +227,74 @@ const QUESTION_BANK = {
   {q:'Which is NOT a JS data type?',o:['string','boolean','float','undefined'],c:2,e:'JavaScript uses "number" not "float" as a type.',d:'hard'},
 ],
 
-// ============= UNIVERSITY: CS =============
-'ucp1': [
+// ============= UNIVERSITY: PROGRAMMING & CS =============
+// C PROGRAMMING
+'upc1': [
+  {q:'What is the output?\n#include <stdio.h>\nint main() { int x = 5; printf("%d", x++ + ++x); return 0; }',o:['Undefined Behavior','11','13','12'],c:0,e:'Modifying a variable multiple times within the same sequence point leads to undefined behavior in C.',d:'hard'},
+  {q:'Evaluate the C code:\nchar str[] = "Hello";\nprintf("%lu", sizeof(str));',o:['6','5','8','4'],c:0,e:'sizeof() includes the null terminator \\0, so 5 characters + 1 = 6.',d:'medium'},
+  {q:'Which of the following creates a strict constant in C that cannot be modified via pointers without invoking undefined behavior?',o:['const int x = 5;','#define x 5','int const x = 5;','All of the above'],c:0,e:'Using the const keyword declares a true constant in memory. #define is just text substitution.',d:'medium'},
+  {q:'What does the "register" storage class guarantee?',o:['Nothing, it is merely a hint to the compiler','The variable is stored in CPU registers','Faster access time','No memory address exists'],c:0,e:'It only hints the compiler to store the variable in a register, but modern compilers optimize this automatically.',d:'easy'},
+  {q:'What is printed?\nint a=0; if(a++) printf("True"); else printf("False");',o:['False','True','Compile Error','0'],c:0,e:'Post-increment evaluates `a` (which is 0, falsy) before incrementing, jumping to the else block.',d:'medium'}
+],
+'upc5': [
+  {q:'What will happen?\nint *p = NULL;\nprintf("%d", *p);',o:['Segmentation Fault','0','NullReferenceException','Compile Error'],c:0,e:'Dereferencing a NULL pointer immediately causes a segmentation fault in C.',d:'easy'},
+  {q:'What is the purpose of realloc()?',o:['To resize previously allocated dynamic memory','To free memory','To allocate uninitialized memory','To clear memory'],c:0,e:'realloc expands or shrinks dynamically allocated memory blocks while preserving data.',d:'easy'}
+],
+
+// C++ PROGRAMMING
+'ucpp1': [
   {q:'What is the output of the following code snippet?\n\nint x = 5;\ncout << (x == 5 ? "Equal" : "Not Equal");',o:['Equal','Not Equal','5','Compile Error'],c:0,e:'The ternary operator evaluates to "Equal" since x is indeed 5.',d:'easy'},
   {q:'Evaluate the output of this C++ program:\n\nint a = 10, b = 20;\nif (a = b) {\n    cout << a;\n} else {\n    cout << 0;\n}',o:['20','10','0','Compile Error'],c:0,e:'`a = b` is an assignment, not a comparison. `a` becomes 20, which evaluates to true, so it prints 20.',d:'medium'},
   {q:'What will be printed to the console?\n\nint i = 0;\nwhile (i < 3) {\n    cout << i++;\n}',o:['012','123','0123','Infinite Loop'],c:0,e:'Post-increment (i++) yields the current value before incrementing, so it prints 0, 1, and 2 continuously.',d:'easy'},
   {q:'Which of the following is strictly true regarding C++ references compared to pointers?',o:['A reference cannot be explicitly reassigned to refer to a different object after initialization.','References can be null.','Pointers are conceptually safer than references.','References take up more memory space than standard pointers.'],c:0,e:'Unlike pointers, references must refer to an existing object immediately and cannot be reseated or null.',d:'medium'},
   {q:'What is the output of this array indexing trick?\n\nint arr[] = {1, 2, 3};\ncout << 1[arr];',o:['2','1','3','Syntax Error'],c:0,e:'`1[arr]` is perfectly valid in C++ and equivalent to `arr[1]` due to pointer arithmetic ( *(1 + arr) ). The element at index 1 is 2.',d:'hard'},
 ],
-'ucp2': [
+'ucpp2': [
   {q:'Determine the output of the following OOP code:\n\nclass A { public: A() { cout<<"A"; } };\nclass B : public A { public: B() { cout<<"B"; } };\nB obj;',o:['AB','BA','B','Compile Error'],c:0,e:'The base class (A) constructor is always called before the derived class (B) constructor.',d:'medium'},
   {q:'Select the correct answer regarding this code block:\n\nclass Base {\n    virtual void print() { cout<<"Base"; }\n};\nclass Derived : public Base {\n    void print() override { cout<<"Derived"; }\n};\nBase* b = new Derived();\nb->print();',o:['Compile Error: print() is private by default','Base','Derived','Runtime Error'],c:0,e:'In a `class`, members are private by default. Without a `public:` access specifier, `b->print()` fails compilation.',d:'hard'},
   {q:'What exactly constitutes a "pure virtual function" in C++?',o:['A virtual function declared with `= 0` that makes the base class abstract.','A function that returns exactly 0.','A function declared outside a class but inside a namespace.','A function that cannot be overridden by derived classes.'],c:0,e:'Declared with `= 0`, it forces derived classes to implement it, making the base class an abstract interface.',d:'easy'},
   {q:'Under what specific condition should a class destructor be explicitly marked as `virtual`?',o:['When the class is designed to be used polymorphically and deleted via a base class pointer.','Always, it is a strict requirement for all classes.','Only when no constructors are defined in the class.','Destructors cannot be virtual in C++.'],c:0,e:'This ensures the derived class destructor is correctly called when deleting a base pointer pointing to a derived object to prevent memory leaks.',d:'medium'},
   {q:'What is the output of this static scope example?\n\nclass C { public: ~C(){ cout<<"D"; } };\nvoid func() { static C obj; }\nint main() {\n    func();\n    cout<<"M";\n    return 0;\n}',o:['MD','DM','Nothing is printed','Compile Error'],c:0,e:'`obj` is static. It gets created when `func()` is called, but is destroyed only when the program entirely exits (after main returns). So M prints, then D.',d:'hard'},
 ],
-'ucp3': [
+'ucpp3': [
   {q:'What happens when this code is executed?\n\nint* p = new int(10);\ndelete p;\ncout << *p;',o:['Undefined Behavior','10','0','Compile Error'],c:0,e:'Dereferencing a deleted pointer (dangling pointer) results in undefined behavior. It may crash or print garbage.',d:'easy'},
   {q:'Which modern C++11 smart pointer provides built-in reference counting to allow shared ownership of a dynamically allocated object?',o:['std::shared_ptr','std::unique_ptr','std::weak_ptr','std::auto_ptr'],c:0,e:'`std::shared_ptr` uses an atomic control block to track reference counts, deleting the memory when the count reaches zero.',d:'easy'},
   {q:'Identify the memory management flaw in this function:\n\nvoid run() {\n    int* arr = new int[50];\n    delete arr;\n}',o:['Undefined Behavior: Incorrect array deallocation','Memory Leak: Size not specified','Buffer Overflow: 50 is too large','Segmentation Fault: Null pointer dereference'],c:0,e:'Memory allocated with `new[]` must be freed with `delete[]`. Using standard `delete` leads to undefined behavior and potential memory leaks.',d:'medium'},
   {q:'What is the specific functionality of the `std::unique_ptr::release()` method?',o:['It relinquishes ownership and returns the raw pointer without deleting the object.','It deletes the managed object immediately and nullifies the pointer.','It transfers ownership to a newly created `unique_ptr`.','It returns the current reference count of the pointer.'],c:0,e:'`release()` stops managing the pointer so it won\'t be automatically deleted when the `unique_ptr` goes out of scope.',d:'hard'},
   {q:'What does "Placement new" achieve in advanced C++?',o:['It invokes an object constructor on a specific, pre-allocated memory address.','It forces memory allocation to happen on the CPU cache.','It provides automatic garbage collection for legacy code.','It places an object perfectly into a C++ STL container.'],c:0,e:'Syntax: `new (pointer) Object()`. It constructs the object in pre-allocated buffers, highly useful in game engines and custom allocators.',d:'hard'},
 ],
-'ucp4': [
+'ucpp5': [
   {q:'What will the following code output regarding the vector state?\n\nstd::vector<int> v = {1, 2, 3};\nv.push_back(4);\ncout << v.size();',o:['4','3','6','Compile Error'],c:0,e:'Adding the 4th element increases the size (number of valid elements) to 4.',d:'easy'},
   {q:'Which internal data structure is the C++ STL `std::map` normally built upon to maintain sorted key-value pairs?',o:['Self-balancing Binary Search Tree (e.g., Red-Black tree)','Contiguous Array','Hash Table','Doubly Linked List'],c:0,e:'`std::map` guarantees O(log N) operations and ordered keys by using a self-balancing BST.',d:'medium'},
   {q:'What is the output of the following C++11 Lambda function?\n\nauto compute = [](int x) { return x * 2; };\ncout << compute(3);',o:['6','3','Syntax Error','0'],c:0,e:'The lambda captures no variables (`[]`), takes `x`, and returns `x*2`. Passing 3 correctly outputs 6.',d:'easy'},
   {q:'What exactly does "template specialization" achieve in C++ meta-programming?',o:['Providing a specific overriding implementation of a generic template for a specific datatype (e.g., int).','Restricting a template to only compile on specific operating systems.','Converting generic templates automatically into runtime interfaces.','Banning the use of specific datatypes in standard functions.'],c:0,e:'Specialization allows you to write custom, highly optimized code for a specific type while keeping the general template for everything else.',d:'medium'},
   {q:'Which function is called in the following complex overloading scenario?\n\ntemplate<typename T> void f(T x) { cout << "Generic "; }\ntemplate<> void f(int x) { cout << "Int "; }\nvoid f(double x) { cout << "Double "; }\n\nint main() { f(0.0); }',o:['Double','Int','Generic','Compile Error: Ambiguous match'],c:0,e:'`0.0` is a double. A non-template function is always preferred over a template if it perfectly matches the argument type.',d:'hard'},
 ],
+
+// JAVA PROGRAMMING
+'uj1': [
+  {q:'What is the output of this Java code snippet?\n\nint x = 5;\nSystem.out.print(x++ + ++x);',o:['12','10','13','11'],c:0,e:'x++ returns 5, x becomes 6. Then ++x makes x 7 and returns 7. 5 + 7 = 12.',d:'medium'},
+  {q:'Evaluate this comparison:\n\nString s1 = "Java";\nString s2 = new String("Java");\nSystem.out.println(s1 == s2);',o:['false','true','NullPointerException','Compile Error'],c:0,e:'`==` checks object reference memory locations. `s1` is in the string pool, `s2` is created on the heap, so they are not the same reference.',d:'easy'},
+  {q:'What does the `transient` keyword do in Java?',o:['Prevents an object field from being serialized.','Limits variable access to the same thread.','Marks a variable to be garbage collected immediately.','Makes a method run concurrently.'],c:0,e:'During serialization, fields marked as `transient` are ignored and not saved.',d:'hard'},
+  {q:'What happens if you run a Java class with no `main` method?',o:['Runtime Error: Main method not found','Compile Error','The application terminates silently','It runs the constructor automatically'],c:0,e:'The JVM strictly requires a `public static void main(String[] args)` to begin execution.',d:'easy'},
+  {q:'Output of the following?\n\ntry {\n  return 1;\n} finally {\n  return 2;\n}',o:['2','1','Compile Error','Exception thrown'],c:0,e:'The `finally` block ALWAYS executes and overrides the return value of the `try` block.',d:'hard'},
+],
+
+// ADVANCED PYTHON
+'upa1': [
+  {q:'What is the output of this OOP code?\n\nclass A:\n    def __init__(self):\n        self.x = 1\nclass B(A):\n    def __init__(self):\n        self.y = 2\n\nb = B()\nprint(b.x)',o:['AttributeError','1','None','2'],c:0,e:'B overrides A\'s __init__ without calling super().__init__(), so b.x is never initialized.',d:'medium'},
+  {q:'What happens when you declare a method with `@staticmethod`?',o:['It does not receive an implicit first argument (like self or cls).','It can alter class state but not instance state.','It makes the method private.','It throws an error if called rapidly.'],c:0,e:'Static methods behave like regular functions but belong to the class\'s namespace.',d:'easy'},
+  {q:'Evaluate this Python output:\n\nnums = [1, 2, 3]\nnums[1:2] = [4, 5, 6]\nprint(nums)',o:['[1, 4, 5, 6, 3]','[1, 4, 5, 6]','[1, [4, 5, 6], 3]','Error'],c:0,e:'Slice assignment replaces the sliced region with the provided iterable elements.',d:'hard'}
+],
+'upa2': [
+  {q:'What does the `yield` keyword do in Python?',o:['Pauses a function and saves its local state so it can be resumed later.','Terminates the program immediately.','Automatically catches exceptions.','Returns a value permanently without possibility of continuation.'],c:0,e:'`yield` turns a regular function into a generator, allowing lazy iteration.',d:'easy'},
+  {q:'Output of this decorator?\n\ndef deco(func):\n    def wrapper():\n        return func() + 1\n    return wrapper\n\n@deco\ndef test():\n    return 2\n\nprint(test())',o:['3','2','Error','None'],c:0,e:'The decorator overrides `test` with `wrapper`, which returns `test() [2] + 1 = 3`.',d:'medium'}
+],
+
+// DATA STRUCTURES
 'uds1': [
+  {q:'What is the time complexity of appending to a dynamic array (like std::vector or list) that requires resizing?',o:['O(n) worst-case, O(1) amortized','O(1) strictly','O(log n)','O(n²)'],c:0,e:'Resizing means allocating a new array and copying elements (O(n)), but overall amortized over many appends, it averages to O(1).',d:'hard'},
+  {q:'Identify the bug in trying to delete the tail of a Singly Linked List quickly without a tail pointer.',o:['You must traverse the entire list from the head to find the node before the tail.','Memory leak will occur if not cast properly.','It takes O(1) time consistently.','You cannot delete the tail.'],c:0,e:'Because you cannot traverse backwards in a SLL, you must go O(n) from the head to find the second-to-last node to sever the link.',d:'medium'},
   {q:'Array access by index is:',o:['O(n)','O(log n)','O(1)','O(n²)'],c:2,e:'Direct index = O(1) constant time.',d:'easy'},
   {q:'Linked list head insertion is:',o:['O(1)','O(n)','O(log n)','O(n²)'],c:0,e:'Just update head pointer — O(1).',d:'easy'},
   {q:'Which does NOT allow random access?',o:['Array','ArrayList','Linked List','Vector'],c:2,e:'Linked lists need traversal — no index access.',d:'medium'},
