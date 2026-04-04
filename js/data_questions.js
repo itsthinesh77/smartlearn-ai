@@ -202,13 +202,19 @@ const QUESTION_BANK = {
 ],
 
 // COMPUTER SCIENCE
+'scp2': [
+  {q:'What is the output of the following code?\n\nx = 5\ny = 2\nprint(x ** y)',o:['25','10','7','Error'],c:0,e:'The ** operator represents exponentiation. 5 to the power of 2 is 25.',d:'easy'},
+  {q:'Evaluate this Python output:\n\nmy_list = [1, 2, 3]\nmy_list.append([4, 5])\nprint(len(my_list))',o:['4','5','3','Error'],c:0,e:'The append() method adds its argument as a single element, so the list becomes [1, 2, 3, [4, 5]], making its length 4.',d:'medium'},
+  {q:'What does the typical Python string slice `word[::-1]` do?',o:['Reverses the string','Returns the last character','Throws an index error','Returns the first character'],c:0,e:'A step of -1 traverses the string backwards, effectively reversing it.',d:'easy'},
+  {q:'What will the following code print?\n\nfor i in range(3):\n    if i == 1:\n        continue\n    print(i, end="")',o:['02','012','12','0'],c:0,e:'The continue statement skips the print for i=1, so it prints 0 and then 2.',d:'medium'},
+  {q:'Determine the output:\n\nTrue and False or True',o:['True','False','None','Error'],c:0,e:'AND is evaluated before OR. (True and False) is False. Then (False or True) is True.',d:'hard'},
+],
 'spy1': [
-  {q:'Python output function is:',o:['echo()','printf()','print()','display()'],c:2,e:'print() outputs text in Python.',d:'easy'},
-  {q:'Python is:',o:['Compiled','Interpreted','Machine language','Assembly'],c:1,e:'Python is interpreted — executed line by line.',d:'easy'},
-  {q:'What does # mean in Python?',o:['String','Comment','Variable','Operator'],c:1,e:'# marks a single-line comment.',d:'easy'},
-  {q:'Output of: len("Hello")',o:['4','5','6','Error'],c:1,e:'len() counts characters. "Hello" has 5 characters.',d:'medium'},
-  {q:'Which data type is mutable?',o:['tuple','string','list','int'],c:2,e:'Lists are mutable (can be changed), tuples and strings are not.',d:'medium'},
-  {q:'What does "pass" do?',o:['Exits loop','Does nothing (placeholder)','Returns value','Prints output'],c:1,e:'pass is a null statement, used as a placeholder.',d:'hard'},
+  {q:'What is the output of the following Python code?\n\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(x)',o:['[1, 2, 3, 4]','[1, 2, 3]','[4, 1, 2, 3]','Error'],c:0,e:'In Python, variables are references to objects. Both x and y point to the same list in memory.',d:'medium'},
+  {q:'Evaluate the output of this list comprehension:\n\nnums = [x * 2 for x in range(3)]\nprint(nums)',o:['[0, 2, 4]','[2, 4, 6]','[0, 1, 2]','[1, 2, 3]'],c:0,e:'range(3) yields 0, 1, 2. Multiplying each by 2 yields 0, 2, 4.',d:'easy'},
+  {q:'What does this code output?\n\ndef func(a, lst=[]):\n    lst.append(a)\n    return lst\n\nprint(func(1))\nprint(func(2))',o:['[1] and [1, 2]','[1] and [2]','Error','[1, 2] and [1, 2]'],c:0,e:'Default mutable arguments (like lists) are evaluated only once when the function is defined. The same list is appended to twice.',d:'hard'},
+  {q:'What will the following code print?\n\ntry:\n    print(1 / 0)\nexcept ZeroDivisionError:\n    print("A")\nfinally:\n    print("B")',o:['A then B','A','B','Error'],c:0,e:'The exception block prints A, and the finally block always executes, printing B.',d:'medium'},
+  {q:'What is the output here?\n\na = (1, 2, [3, 4])\na[2].append(5)\nprint(a)',o:['(1, 2, [3, 4, 5])','TypeError','(1, 2, [3, 4])','SyntaxError'],c:0,e:'While tuples are immutable, the list inside the tuple is mutable and can be modified in place.',d:'hard'},
 ],
 'scw1': [
   {q:'HTML stands for:',o:['Hyper Trainer Marking Language','HyperText Markup Language','HyperText Marketing Language','HyperTool Markup Language'],c:1,e:'HTML = HyperText Markup Language.',d:'easy'},
