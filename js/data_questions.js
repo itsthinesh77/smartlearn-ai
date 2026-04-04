@@ -304,6 +304,16 @@ const QUESTION_BANK = {
 
 // C++ PROGRAMMING
 'ucpp1': [
+  {q:'Which symbol is used to include header files in C++?',o:['#include','import','using','include'],c:0,e:'The #include preprocessor directive is used to include header files.',d:'easy'},
+  {q:'Which of the following is a valid C++ comment?',o:['// comment','/* comment */','Both','None'],c:2,e:'C++ supports both single-line (//) and multi-line (/* */) comments.',d:'easy'},
+  {q:'Which function is used for output in C++?',o:['printf()','cout','print()','display()'],c:1,e:'cout is the standard output stream object in C++.',d:'easy'},
+  {q:'Which header file is used for cout?',o:['stdio.h','iostream','string','math.h'],c:1,e:'The standard input-output stream (iostream) header contains cout.',d:'easy'},
+  {q:'Which operator is used for scope resolution?',o:['.','->','::',':'],c:2,e:'The :: operator is used to specify scope, such as finding a class or namespace member.',d:'easy'},
+  {q:'What is the correct syntax to declare a variable?',o:['int x;','x int;','declare x;','var x;'],c:0,e:'In C++, the type comes first followed by the variable name.',d:'easy'},
+  {q:'Which of the following is a correct main function?',o:['void main()','int main()','main()','All'],c:1,e:'The standard signature for the main entry point returns an integer.',d:'easy'},
+  {q:'Which operator is used for input?',o:['>>','<<','==','='],c:0,e:'The extraction operator (>>) takes input from the cin stream.',d:'easy'},
+  {q:'Which function is used to read a line?',o:['getline()','scanf()','cin()','read()'],c:0,e:'The standard getline() function reads an entire line of text, including spaces.',d:'easy'},
+  {q:'Which of the following is correct for namespace?',o:['using namespace std;','namespace std;','std namespace;','None'],c:0,e:'"using namespace std;" brings all std entities into the current scope.',d:'easy'},
   {q:'What is the output of the following code snippet?\n\nint x = 5;\ncout << (x == 5 ? "Equal" : "Not Equal");',o:['Equal','Not Equal','5','Compile Error'],c:0,e:'The ternary operator evaluates to "Equal" since x is indeed 5.',d:'easy'},
   {q:'Evaluate the output of this C++ program:\n\nint a = 10, b = 20;\nif (a = b) {\n    cout << a;\n} else {\n    cout << 0;\n}',o:['20','10','0','Compile Error'],c:0,e:'`a = b` is an assignment, not a comparison. `a` becomes 20, which evaluates to true, so it prints 20.',d:'medium'},
   {q:'What will be printed to the console?\n\nint i = 0;\nwhile (i < 3) {\n    cout << i++;\n}',o:['012','123','0123','Infinite Loop'],c:0,e:'Post-increment (i++) yields the current value before incrementing, so it prints 0, 1, and 2 continuously.',d:'easy'},
@@ -311,6 +321,13 @@ const QUESTION_BANK = {
   {q:'What is the output of this array indexing trick?\n\nint arr[] = {1, 2, 3};\ncout << 1[arr];',o:['2','1','3','Syntax Error'],c:0,e:'`1[arr]` is perfectly valid in C++ and equivalent to `arr[1]` due to pointer arithmetic ( *(1 + arr) ). The element at index 1 is 2.',d:'hard'},
 ],
 'ucpp2': [
+  {q:'Which keyword is used to define a class?',o:['struct','class','object','define'],c:1,e:'The class keyword is used to declare a new class object type.',d:'easy'},
+  {q:'Which keyword is used for inheritance?',o:['inherit','extends',':','using'],c:2,e:'The colon (:) is used to inherit from a base class in C++.',d:'easy'},
+  {q:'What is the default access specifier in a class?',o:['public','private','protected','default'],c:1,e:'By default, all members of a struct are public, but all members of a class are private.',d:'easy'},
+  {q:'Which keyword is used to create object?',o:['new','class','object','None'],c:3,e:'Normally objects are instantiated directly by type without a keyword (e.g. `MyClass obj;`), though `new` is used for dynamic allocation.',d:'easy'},
+  {q:'Which keyword is used to prevent inheritance?',o:['const','final','static','stop'],c:1,e:'C++11 introduced the final keyword to explicitly prevent derived inheritance.',d:'easy'},
+  {q:'What is function overloading?',o:['Same function name different parameters','Same parameters','Different name same function','None'],c:0,e:'Multiple functions can have the same name as long as their parameter lists are unique.',d:'easy'},
+  {q:'Which of the following is OOP concept?',o:['Encapsulation','Inheritance','Polymorphism','All'],c:3,e:'All three are fundamental pillars of Object-Oriented Programming.',d:'easy'},
   {q:'Determine the output of the following OOP code:\n\nclass A { public: A() { cout<<"A"; } };\nclass B : public A { public: B() { cout<<"B"; } };\nB obj;',o:['AB','BA','B','Compile Error'],c:0,e:'The base class (A) constructor is always called before the derived class (B) constructor.',d:'medium'},
   {q:'Select the correct answer regarding this code block:\n\nclass Base {\n    virtual void print() { cout<<"Base"; }\n};\nclass Derived : public Base {\n    void print() override { cout<<"Derived"; }\n};\nBase* b = new Derived();\nb->print();',o:['Compile Error: print() is private by default','Base','Derived','Runtime Error'],c:0,e:'In a `class`, members are private by default. Without a `public:` access specifier, `b->print()` fails compilation.',d:'hard'},
   {q:'What exactly constitutes a "pure virtual function" in C++?',o:['A virtual function declared with `= 0` that makes the base class abstract.','A function that returns exactly 0.','A function declared outside a class but inside a namespace.','A function that cannot be overridden by derived classes.'],c:0,e:'Declared with `= 0`, it forces derived classes to implement it, making the base class an abstract interface.',d:'easy'},
@@ -318,6 +335,9 @@ const QUESTION_BANK = {
   {q:'What is the output of this static scope example?\n\nclass C { public: ~C(){ cout<<"D"; } };\nvoid func() { static C obj; }\nint main() {\n    func();\n    cout<<"M";\n    return 0;\n}',o:['MD','DM','Nothing is printed','Compile Error'],c:0,e:'`obj` is static. It gets created when `func()` is called, but is destroyed only when the program entirely exits (after main returns). So M prints, then D.',d:'hard'},
 ],
 'ucpp3': [
+  {q:'Which operator is used for pointer?',o:['*','&','Both','None'],c:2,e:'The ampersand (&) gets the address, and the asterisk (*) dereferences the pointer.',d:'easy'},
+  {q:'Which operator is used for dynamic memory allocation?',o:['malloc','alloc','new','create'],c:2,e:'While malloc works, the native C++ operator strictly for dynamic allocation is `new`.',d:'easy'},
+  {q:'Which keyword is used to free memory?',o:['delete','free','remove','clear'],c:0,e:'Memory allocated with `new` must strictly be freed using the `delete` keyword.',d:'easy'},
   {q:'What happens when this code is executed?\n\nint* p = new int(10);\ndelete p;\ncout << *p;',o:['Undefined Behavior','10','0','Compile Error'],c:0,e:'Dereferencing a deleted pointer (dangling pointer) results in undefined behavior. It may crash or print garbage.',d:'easy'},
   {q:'Which modern C++11 smart pointer provides built-in reference counting to allow shared ownership of a dynamically allocated object?',o:['std::shared_ptr','std::unique_ptr','std::weak_ptr','std::auto_ptr'],c:0,e:'`std::shared_ptr` uses an atomic control block to track reference counts, deleting the memory when the count reaches zero.',d:'easy'},
   {q:'Identify the memory management flaw in this function:\n\nvoid run() {\n    int* arr = new int[50];\n    delete arr;\n}',o:['Undefined Behavior: Incorrect array deallocation','Memory Leak: Size not specified','Buffer Overflow: 50 is too large','Segmentation Fault: Null pointer dereference'],c:0,e:'Memory allocated with `new[]` must be freed with `delete[]`. Using standard `delete` leads to undefined behavior and potential memory leaks.',d:'medium'},
