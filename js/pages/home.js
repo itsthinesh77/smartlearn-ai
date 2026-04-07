@@ -9,7 +9,6 @@ export function renderHome() {
         <p>AI-powered personalized learning platform that adapts to your pace, identifies your weak areas, and helps you master subjects faster.</p>
         <div class="hero-buttons">
           <button class="btn btn-primary btn-lg" onclick="location.hash='#/courses'">🚀 Start Learning</button>
-          <button class="btn btn-secondary btn-lg" onclick="location.hash='#/quiz'">📝 Take a Quiz</button>
         </div>
       </div>
     </section>
