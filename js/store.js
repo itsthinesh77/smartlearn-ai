@@ -1,97 +1,191 @@
-// ===== Supabase-backed State Management =====
-import { supabase } from './supabase.js';
+// ===== SmartLearn AI — Dual-Mode State Management =====
+// Mode 1: C++ Native Backend (localhost:5000) — for local use
+// Mode 2: localStorage fallback — for Vercel/cloud deployments (fully persistent)
 
-// ---- Local cache (for sync reads during render) ----
+// ---- In-memory cache ----
 let _currentUser = null;
-let _profile = null;
 
-// ---- Auth ----
-export async function loginUser(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
+// ---- Storage Keys ----
+const KEY_USERS_DB    = 'sl_users_db';     // all registered accounts
+const KEY_RESULTS_DB  = 'sl_results_db';   // all quiz results
+const KEY_SESSION     = 'sl_user';         // active session (email + password)
 
-  _currentUser = data.user;
-  await loadProfile();
-  window.dispatchEvent(new Event('auth-changed'));
-  return { user: getFormattedUser() };
+const CPP_API_URL = 'http://localhost:5000/api';
+let _cppAvailable = null; // null = not checked yet
+
+// =====================================================
+// ---- Backend Detection ----
+// =====================================================
+async function isCppAvailable() {
+  if (_cppAvailable !== null) return _cppAvailable;
+  try {
+    const ctrl = new AbortController();
+    setTimeout(() => ctrl.abort(), 1500);
+    const res = await fetch(`${CPP_API_URL}/courses?level=all`, { signal: ctrl.signal });
+    _cppAvailable = res.ok;
+  } catch {
+    _cppAvailable = false;
+  }
+  console.log(_cppAvailable ? '🖥️ C++ Backend detected' : '☁️ Using localStorage fallback');
+  return _cppAvailable;
 }
 
-/**
- * BYPASS AUTH (Dev Only) 
- * Bypasses Supabase email confirmation limits for local testing.
- */
-export async function bypassAuth() {
-  _currentUser = {
-    id: '00000000-0000-0000-0000-000000000000',
-    email: 'dev@smartlearn.com',
-    user_metadata: { name: 'Dev Guest' }
+// =====================================================
+// ---- localStorage Helpers ----
+// =====================================================
+function ls_getUsers() {
+  try { return JSON.parse(localStorage.getItem(KEY_USERS_DB) || '[]'); } catch { return []; }
+}
+function ls_saveUsers(users) {
+  localStorage.setItem(KEY_USERS_DB, JSON.stringify(users));
+}
+function ls_getResults() {
+  try { return JSON.parse(localStorage.getItem(KEY_RESULTS_DB) || '[]'); } catch { return []; }
+}
+function ls_saveResults(results) {
+  localStorage.setItem(KEY_RESULTS_DB, JSON.stringify(results));
+}
+function ls_getUserById(id) {
+  return ls_getUsers().find(u => u.id === id) || null;
+}
+function ls_updateUser(updated) {
+  const users = ls_getUsers().map(u => u.id === updated.id ? { ...u, ...updated } : u);
+  ls_saveUsers(users);
+  // Also keep in-memory cache in sync
+  if (_currentUser && _currentUser.id === updated.id) {
+    _currentUser = { ..._currentUser, ...updated };
+  }
+}
+function generateId() {
+  return 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+}
+
+// =====================================================
+// ---- Auth (localStorage mode) ----
+// =====================================================
+function ls_register(name, email, password) {
+  const users = ls_getUsers();
+  if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+    return { error: 'User already exists' };
+  }
+  const newUser = {
+    id: generateId(), name, email, password,
+    xp: 0, education_level: null, completed_topics: [],
+    streak_current: 0, streak_longest: 0,
+    streak_last_active: null, streak_active_days: [],
+    badges: [], avatar: '🎓', created_at: new Date().toISOString()
   };
-  _profile = {
-    id: _currentUser.id,
-    name: 'Dev Guest',
-    email: _currentUser.email,
-    education_level: 'university',
-    xp: 1250,
-    level: 7,
-    streak_current: 5,
-    streak_longest: 12,
-    streak_last_active: new Date().toISOString().split('T')[0],
-    streak_active_days: [new Date().toISOString().split('T')[0]],
-    completed_topics: [],
-    badges: [{ id: 'quiz_master', name: 'Quiz Master', icon: '🏆' }]
-  };
-  
+  ls_saveUsers([...users, newUser]);
+  return { status: 'success', user: newUser };
+}
+
+function ls_login(email, password) {
+  const user = ls_getUsers().find(
+    u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+  );
+  if (!user) {
+    const exists = ls_getUsers().find(u => u.email.toLowerCase() === email.toLowerCase());
+    return { error: exists ? 'Invalid password' : 'User not found' };
+  }
+  return { status: 'success', user };
+}
+
+// =====================================================
+// ---- Public Auth API ----
+// =====================================================
+export async function loginUser(email, password) {
+  const cpp = await isCppAvailable();
+
+  if (cpp) {
+    try {
+      const res = await fetch(`${CPP_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        _currentUser = { ...data.user, email };
+        localStorage.setItem(KEY_SESSION, JSON.stringify({ email, password }));
+        window.dispatchEvent(new Event('auth-changed'));
+        console.log('✅ Authenticated via C++ Backend');
+        return { user: getFormattedUser() };
+      }
+      return { error: data.error || 'Login failed' };
+    } catch (e) {
+      _cppAvailable = false; // mark as unavailable and fallback
+    }
+  }
+
+  // localStorage fallback
+  const result = ls_login(email, password);
+  if (result.error) return { error: result.error };
+
+  _currentUser = result.user;
+  localStorage.setItem(KEY_SESSION, JSON.stringify({ email, password }));
   window.dispatchEvent(new Event('auth-changed'));
+  console.log('✅ Authenticated via localStorage');
   return { user: getFormattedUser() };
 }
 
 export async function registerUser(name, email, password) {
-  const { data, error } = await supabase.auth.signUp({
-    email, password,
-    options: { data: { name } }
-  });
-  if (error) return { error: error.message };
+  const cpp = await isCppAvailable();
 
-  _currentUser = data.user;
-
-  // Update profile name
-  if (_currentUser) {
-    await supabase.from('profiles').update({ name }).eq('id', _currentUser.id);
-    await loadProfile();
+  if (cpp) {
+    try {
+      const res = await fetch(`${CPP_API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        return await loginUser(email, password);
+      }
+      return { error: data.error || 'Registration failed' };
+    } catch (e) {
+      _cppAvailable = false;
+    }
   }
 
+  // localStorage fallback
+  const result = ls_register(name, email, password);
+  if (result.error) return { error: result.error };
+
+  _currentUser = result.user;
+  localStorage.setItem(KEY_SESSION, JSON.stringify({ email, password }));
   window.dispatchEvent(new Event('auth-changed'));
+  console.log('✅ Registered via localStorage');
   return { user: getFormattedUser() };
 }
 
 export async function initAuth() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) {
-    _currentUser = session.user;
-    await loadProfile();
+  const saved = localStorage.getItem(KEY_SESSION);
+  if (saved) {
+    try {
+      const { email, password } = JSON.parse(saved);
+      await loginUser(email, password);
+    } catch { localStorage.removeItem(KEY_SESSION); }
   }
-
-  // Listen for auth changes
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (session?.user) {
-      _currentUser = session.user;
-      await loadProfile();
-    } else {
-      _currentUser = null;
-      _profile = null;
-    }
-    window.dispatchEvent(new Event('auth-changed'));
-  });
 }
 
-async function loadProfile() {
-  if (!_currentUser) return;
-  const { data } = await supabase.from('profiles').select('*').eq('id', _currentUser.id).single();
-  _profile = data;
+export async function logout() {
+  // Persist any pending profile changes before logout
+  if (_currentUser) ls_updateUser(_currentUser);
+  _currentUser = null;
+  localStorage.removeItem(KEY_SESSION);
+  window.dispatchEvent(new Event('auth-changed'));
 }
 
+export function isAdmin() {
+  return _currentUser?.email === 'admin@smartlearn.com';
+}
+
+// =====================================================
+// ---- User Formatting ----
+// =====================================================
 export function getCurrentUser() {
-  if (!_currentUser || !_profile) return null;
+  if (!_currentUser) return null;
   return getFormattedUser();
 }
 
@@ -99,242 +193,221 @@ function getFormattedUser() {
   if (!_currentUser) return null;
   return {
     id: _currentUser.id,
-    email: _currentUser.email,
-    name: _profile?.name || _currentUser.email.split('@')[0],
-    avatar: _profile?.avatar || '🎓',
-    role: _profile?.email === 'admin@smartlearn.com' ? 'admin' : 'student',
-    xp: _profile?.xp || 0,
-    level: _profile?.level || 1,
-    badges: _profile?.badges || [],
+    email: _currentUser.email || '',
+    name: _currentUser.name || 'Student',
+    avatar: _currentUser.avatar || '🎓',
+    role: _currentUser.email === 'admin@smartlearn.com' ? 'admin' : 'student',
+    xp: _currentUser.xp || 0,
+    education_level: _currentUser.education_level || null,
+    level: Math.floor((_currentUser.xp || 0) / 200) + 1,
+    badges: _currentUser.badges || [],
     streak: {
-      current: _profile?.streak_current || 0,
-      longest: _profile?.streak_longest || 0,
-      lastActiveDate: _profile?.streak_last_active,
-      activeDays: _profile?.streak_active_days || []
+      current: _currentUser.streak_current || 0,
+      longest: _currentUser.streak_longest || 0,
+      lastActiveDate: _currentUser.streak_last_active,
+      activeDays: _currentUser.streak_active_days || []
     }
   };
 }
 
-export async function logout() {
-  await supabase.auth.signOut();
-  _currentUser = null;
-  _profile = null;
-}
-
-export function isAdmin() {
-  return _profile?.email === 'admin@smartlearn.com';
-}
-
+// =====================================================
 // ---- Education Level ----
+// =====================================================
 export async function setEducationLevel(userId, level) {
-  await supabase.from('profiles').update({ education_level: level }).eq('id', userId);
-  if (_profile) _profile.education_level = level;
+  if (_currentUser) {
+    _currentUser.education_level = level;
+    ls_updateUser({ id: _currentUser.id, education_level: level });
+    await saveProfileUpdate();
+  }
 }
 
 export function getEducationLevel(userId) {
-  return _profile?.education_level || null;
+  return _currentUser?.education_level || null;
 }
 
-// ---- Courses (from Supabase) ----
+// =====================================================
+// ---- Courses ----
+// =====================================================
 export async function fetchCourses(level) {
-  const query = supabase.from('courses').select('*');
-  if (level) query.eq('level', level);
-  const { data } = await query;
-  return data || [];
+  const cpp = await isCppAvailable();
+  if (cpp) {
+    try {
+      const res = await fetch(`${CPP_API_URL}/courses?level=${level || 'all'}`);
+      const data = await res.json();
+      console.log(`📚 Loaded ${data.length} courses from C++ Backend`);
+      return data;
+    } catch { _cppAvailable = false; }
+  }
+  return []; // Frontend static data used via window.__COURSES in app.js
 }
 
 export async function fetchCourse(cid) {
-  const { data } = await supabase.from('courses').select('*').eq('cid', cid).single();
-  return data;
+  const courses = await fetchCourses('all');
+  return courses.find(c => c.id === cid);
 }
 
+// =====================================================
 // ---- Quiz ----
+// =====================================================
 export async function fetchQuestions(topicId, difficulty, limit = 10) {
-  let query = supabase.from('questions').select('*').eq('topic_id', topicId);
-  if (difficulty) query = query.eq('difficulty', difficulty);
-  query = query.limit(limit);
-  const { data } = await query;
-  return data || [];
+  if (window.__GET_QUESTIONS) {
+    return window.__GET_QUESTIONS(topicId, difficulty, limit);
+  }
+  return [];
 }
 
 export async function saveQuizResult(result) {
-  const { data, error } = await supabase.from('quiz_results').insert({
-    user_id: result.userId,
-    course_id: result.courseId,
-    topic_id: result.topicId || '',
-    subject: result.subject || '',
-    score: result.score,
-    total: result.total,
-    difficulty: result.difficulty || 'medium',
-    answers: result.answers || [],
-    xp_earned: result.xpEarned || 0
-  }).select();
+  const entry = {
+    ...result,
+    id: Date.now().toString(),
+    date: new Date().toISOString()
+  };
 
-  // Update XP + streak
-  if (_profile && result.userId) {
-    const newXp = (_profile.xp || 0) + (result.xpEarned || result.score * 10);
-    const newLevel = Math.floor(newXp / 200) + 1;
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-    let newStreak = _profile.streak_current || 0;
-    let longest = _profile.streak_longest || 0;
-    const activeDays = [...(_profile.streak_active_days || [])];
-
-    if (_profile.streak_last_active !== today) {
-      if (_profile.streak_last_active === yesterday) {
-        newStreak += 1;
-      } else {
-        newStreak = 1;
-      }
-      if (!activeDays.includes(today)) activeDays.push(today);
-      if (activeDays.length > 365) activeDays.shift();
-    }
-    if (newStreak > longest) longest = newStreak;
-
-    // Check badges
-    const badges = [...(_profile.badges || [])];
-    const badgeIds = badges.map(b => b.id);
-    const { count: totalQuizzes } = await supabase.from('quiz_results').select('*', { count: 'exact', head: true }).eq('user_id', result.userId);
-    const pct = Math.round((result.score / result.total) * 100);
-
-    if (totalQuizzes >= 10 && !badgeIds.includes('quiz_master')) badges.push({ id: 'quiz_master', name: 'Quiz Master', icon: '🏆', earnedAt: new Date().toISOString() });
-    if (pct === 100 && !badgeIds.includes('perfect_score')) badges.push({ id: 'perfect_score', name: 'Perfect Score', icon: '💯', earnedAt: new Date().toISOString() });
-    if (newStreak >= 7 && !badgeIds.includes('week_warrior')) badges.push({ id: 'week_warrior', name: 'Week Warrior', icon: '🔥', earnedAt: new Date().toISOString() });
-    if (newStreak >= 30 && !badgeIds.includes('month_champion')) badges.push({ id: 'month_champion', name: 'Month Champion', icon: '👑', earnedAt: new Date().toISOString() });
-    if (newLevel >= 5 && !badgeIds.includes('rising_star')) badges.push({ id: 'rising_star', name: 'Rising Star', icon: '⭐', earnedAt: new Date().toISOString() });
-
-    await supabase.from('profiles').update({
-      xp: newXp, level: newLevel,
-      streak_current: newStreak, streak_longest: longest,
-      streak_last_active: today, streak_active_days: activeDays,
-      badges
-    }).eq('id', result.userId);
-
-    await loadProfile(); // Refresh cache
+  // Try C++ backend
+  const cpp = await isCppAvailable();
+  if (cpp) {
+    try {
+      await fetch(`${CPP_API_URL}/quiz/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      });
+    } catch { _cppAvailable = false; }
   }
 
-  return data?.[0];
+  // Always persist to localStorage (source of truth for cloud)
+  const results = ls_getResults();
+  ls_saveResults([...results, entry]);
+
+  // Update user XP in memory and localStorage
+  if (_currentUser) {
+    _currentUser.xp = (_currentUser.xp || 0) + (result.xpEarned || 0);
+    ls_updateUser({ id: _currentUser.id, xp: _currentUser.xp });
+    await saveProfileUpdate();
+  }
+
+  return entry;
 }
 
 export async function getUserQuizHistory(userId) {
-  const { data } = await supabase.from('quiz_results')
-    .select('*').eq('user_id', userId).order('created_at', { ascending: false });
-  // Map to match old format
-  return (data || []).map(r => ({
-    id: r.id, userId: r.user_id, courseId: r.course_id,
-    topicId: r.topic_id, subject: r.subject,
-    score: r.score, total: r.total, difficulty: r.difficulty,
-    answers: r.answers, xpEarned: r.xp_earned,
-    date: r.created_at
-  }));
+  const cpp = await isCppAvailable();
+  if (cpp) {
+    try {
+      const res = await fetch(`${CPP_API_URL}/quiz/results`);
+      const data = await res.json();
+      return (data || []).filter(r => r.userId === userId);
+    } catch { _cppAvailable = false; }
+  }
+  // localStorage fallback
+  return ls_getResults().filter(r => r.userId === userId);
 }
 
+// =====================================================
 // ---- Leaderboard ----
+// =====================================================
 export async function fetchLeaderboard() {
-  const { data: profiles } = await supabase.from('profiles').select('*').order('xp', { ascending: false });
-  const { data: results } = await supabase.from('quiz_results').select('user_id, score, total');
-  
-  if (!profiles) return [];
+  let results = [];
+  const cpp = await isCppAvailable();
+  if (cpp) {
+    try {
+      const res = await fetch(`${CPP_API_URL}/quiz/results`);
+      results = await res.json();
+    } catch { _cppAvailable = false; }
+  }
+  if (!results.length) results = ls_getResults();
 
-  return profiles.map(p => {
-    const userResults = (results || []).filter(r => r.user_id === p.id);
-    const totalCorrect = userResults.reduce((s, r) => s + r.score, 0);
-    const totalQuestions = userResults.reduce((s, r) => s + r.total, 0);
-    const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-    
-    return {
-      userId: p.id,
-      name: p.name || p.email.split('@')[0],
-      avatar: p.avatar || '🎓',
-      score: p.xp || 0,
-      quizzes: userResults.length,
-      accuracy: accuracy
-    };
-  }).sort((a, b) => b.score - a.score);
+  const userStats = {};
+  results.forEach(r => {
+    if (!userStats[r.userId]) userStats[r.userId] = { name: r.name || 'Student', score: 0, quizzes: 0, totalCorrect: 0, totalQ: 0 };
+    userStats[r.userId].score += r.xpEarned || 0;
+    userStats[r.userId].quizzes += 1;
+    userStats[r.userId].totalCorrect += r.score;
+    userStats[r.userId].totalQ += r.total;
+  });
+
+  return Object.entries(userStats).map(([id, s]) => ({
+    userId: id, name: s.name, avatar: '🎓',
+    score: s.score, quizzes: s.quizzes,
+    accuracy: s.totalQ > 0 ? Math.round((s.totalCorrect / s.totalQ) * 100) : 0
+  })).sort((a, b) => b.score - a.score);
 }
 
+// =====================================================
+// ---- Profile Sync ----
+// =====================================================
+async function saveProfileUpdate() {
+  if (!_currentUser) return;
+  // Persist to localStorage immediately
+  ls_updateUser({
+    id: _currentUser.id,
+    xp: _currentUser.xp,
+    education_level: _currentUser.education_level,
+    completed_topics: _currentUser.completed_topics || []
+  });
+  // Try C++ backend
+  try {
+    const cpp = await isCppAvailable();
+    if (cpp) {
+      await fetch(`${CPP_API_URL}/profiles/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: _currentUser.id,
+          xp: _currentUser.xp,
+          education_level: _currentUser.education_level
+        })
+      });
+    }
+  } catch {}
+}
+
+// =====================================================
 // ---- Topic Completion ----
+// =====================================================
 export async function markTopicComplete(userId, topicId) {
-  const topics = [...(_profile?.completed_topics || [])];
-  if (!topics.includes(topicId)) {
-    topics.push(topicId);
-    await supabase.from('profiles').update({
-      completed_topics: topics,
-      xp: (_profile?.xp || 0) + 10
-    }).eq('id', userId);
-    await loadProfile();
+  if (_currentUser) {
+    if (!_currentUser.completed_topics) _currentUser.completed_topics = [];
+    if (!_currentUser.completed_topics.includes(topicId)) {
+      _currentUser.completed_topics.push(topicId);
+      _currentUser.xp = (_currentUser.xp || 0) + 10;
+      await saveProfileUpdate();
+    }
   }
 }
 
 export function isTopicCompleted(userId, topicId) {
-  return (_profile?.completed_topics || []).includes(topicId);
+  return (_currentUser?.completed_topics || []).includes(topicId);
 }
 
 export function getCompletedTopics(userId) {
-  return (_profile?.completed_topics || []).map(topicId => ({ userId, topicId }));
+  return (_currentUser?.completed_topics || []).map(topicId => ({ userId, topicId }));
 }
 
-// ---- Performance (computed from cached/fetched results) ----
-export function getTopicPerformance(userId, topicId) {
-  // Sync version uses local cache — async version below for fresh data
-  return null; // Will be populated by dashboard with async call
-}
-
-export async function getTopicPerformanceAsync(userId, topicId) {
-  const { data } = await supabase.from('quiz_results')
-    .select('score, total').eq('user_id', userId).eq('topic_id', topicId);
-  if (!data || data.length === 0) return null;
-  const best = Math.max(...data.map(r => Math.round((r.score / r.total) * 100)));
-  return { accuracy: best, attempts: data.length };
-}
-
-export async function getAllTopicPerformances(userId) {
-  const { data } = await supabase.from('quiz_results')
-    .select('topic_id, course_id, subject, score, total').eq('user_id', userId);
-  const topics = {};
-  (data || []).forEach(r => {
-    if (!r.topic_id) return;
-    if (!topics[r.topic_id]) topics[r.topic_id] = { scores: [], subject: r.subject, courseId: r.course_id };
-    topics[r.topic_id].scores.push(Math.round((r.score / r.total) * 100));
-  });
-  const result = {};
-  for (const [tid, d] of Object.entries(topics)) {
-    result[tid] = { accuracy: Math.max(...d.scores), attempts: d.scores.length, subject: d.subject, courseId: d.courseId };
-  }
-  return result;
-}
-
-export async function getWeakTopics(userId) {
-  const perfs = await getAllTopicPerformances(userId);
-  const weak = [];
-  for (const [topicId, data] of Object.entries(perfs)) {
-    if (data.accuracy < 60) {
-      weak.push({ topicId, ...data, status: data.accuracy < 40 ? 'weak' : 'average' });
-    }
-  }
-  return weak.sort((a, b) => a.accuracy - b.accuracy);
-}
-
-// ---- Smart Features ----
+// =====================================================
+// ---- Performance Analytics ----
+// =====================================================
 export async function getPerformanceSummary(userId) {
   const history = await getUserQuizHistory(userId);
   if (history.length === 0) return { totalQuizzes: 0, avgScore: 0, accuracy: 0, totalCorrect: 0, totalQuestions: 0 };
-  const totalQuizzes = history.length;
   const totalCorrect = history.reduce((s, q) => s + q.score, 0);
   const totalQuestions = history.reduce((s, q) => s + q.total, 0);
-  const accuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
-  return { totalQuizzes, avgScore: accuracy, accuracy, totalCorrect, totalQuestions };
+  return {
+    totalQuizzes: history.length,
+    avgScore: totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0,
+    accuracy: totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0,
+    totalCorrect, totalQuestions
+  };
 }
 
 export async function getSubjectPerformance(userId) {
   const history = await getUserQuizHistory(userId);
   const subjects = {};
   history.forEach(q => {
-    if (!subjects[q.subject]) subjects[q.subject] = { correct: 0, total: 0, quizzes: 0 };
-    subjects[q.subject].correct += q.score;
-    subjects[q.subject].total += q.total;
-    subjects[q.subject].quizzes += 1;
+    const sub = q.subject || 'General';
+    if (!subjects[sub]) subjects[sub] = { correct: 0, total: 0, quizzes: 0 };
+    subjects[sub].correct += q.score;
+    subjects[sub].total += q.total;
+    subjects[sub].quizzes += 1;
   });
   const result = {};
   for (const [sub, data] of Object.entries(subjects)) {
@@ -345,58 +418,25 @@ export async function getSubjectPerformance(userId) {
 
 export async function getWeakAreas(userId) {
   const perf = await getSubjectPerformance(userId);
-  const weak = [];
-  for (const [sub, data] of Object.entries(perf)) {
-    if (data.accuracy < 60) weak.push({ subject: sub, name: sub, accuracy: data.accuracy });
-  }
-  return weak.sort((a, b) => a.accuracy - b.accuracy);
-}
-
-export function getRecommendedDifficulty(userId, subject) {
-  // Sync fallback
-  return 'easy';
+  return Object.entries(perf)
+    .filter(([_, data]) => data.accuracy < 60)
+    .map(([sub, data]) => ({ subject: sub, name: sub, accuracy: data.accuracy }))
+    .sort((a, b) => a.accuracy - b.accuracy);
 }
 
 export function getCompletionProgress(userId) {
-  const completed = _profile?.completed_topics || [];
-  const courses = window.__COURSES || [];
-  const totalTopics = courses.reduce((s, c) => s + (c.topics?.length || 0), 0);
+  const completed = _currentUser?.completed_topics || [];
+  const totalTopics = 100;
   return {
-    completed: completed.length, total: totalTopics || 1,
-    percentage: totalTopics > 0 ? Math.round((completed.length / totalTopics) * 100) : 0
+    completed: completed.length, total: totalTopics,
+    percentage: Math.round((completed.length / totalTopics) * 100)
   };
 }
 
-// ---- Streak ----
 export function getStreakData(userId) {
-  if (!_profile) return { currentStreak: 0, longestStreak: 0, isActiveToday: false, willExpire: false, calendar: [] };
-
-  const today = new Date().toISOString().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-  const isActiveToday = _profile.streak_last_active === today;
-  const willExpire = !isActiveToday && _profile.streak_last_active === yesterday;
-
-  let displayStreak = _profile.streak_current || 0;
-  if (!isActiveToday && _profile.streak_last_active !== yesterday) displayStreak = 0;
-
-  const calendar = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 86400000);
-    const dateStr = d.toISOString().split('T')[0];
-    calendar.push({
-      date: dateStr,
-      day: d.toLocaleDateString('en', { weekday: 'short' }),
-      active: (_profile.streak_active_days || []).includes(dateStr),
-      isToday: dateStr === today
-    });
-  }
-
-  return { currentStreak: displayStreak, longestStreak: _profile.streak_longest || 0, isActiveToday, willExpire, calendar };
-}
-
-// ---- Unmark topic (keep for compatibility) ----
-export async function unmarkTopicComplete(userId, topicId) {
-  const topics = (_profile?.completed_topics || []).filter(t => t !== topicId);
-  await supabase.from('profiles').update({ completed_topics: topics }).eq('id', userId);
-  await loadProfile();
+  return {
+    currentStreak: _currentUser?.streak_current || 1,
+    longestStreak: _currentUser?.streak_longest || 1,
+    isActiveToday: true, willExpire: false, calendar: []
+  };
 }
