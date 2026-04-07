@@ -1,0 +1,261 @@
+Easy Data Structures MCQs (with Answers)
+1. Which data structure uses FIFO?
+A) Stack B) Queue C) Tree D) Graph
+Answer: B
+2. Which data structure uses LIFO?
+A) Queue B) Stack C) Array D) Linked List
+Answer: B
+3. Which data structure stores elements in contiguous memory?
+A) Linked List B) Array C) Tree D) Graph
+Answer: B
+4. Which is a linear data structure?
+A) Tree B) Graph C) Array D) Heap
+Answer: C
+5. What is the first element in a queue called?
+A) Rear B) Top C) Front D) Head
+Answer: C
+6. What is the last element in a queue called?
+A) Rear B) Front C) Top D) End
+Answer: A
+7. Which operation adds element to stack?
+A) Pop B) Push C) Insert D) Add
+Answer: B
+8. Which operation removes element from stack?
+A) Delete B) Remove C) Pop D) Push
+Answer: C
+9. Which structure uses nodes and pointers?
+A) Array B) Linked List C) Stack D) Queue
+Answer: B
+10. Which is non-linear data structure?
+A) Array B) Stack C) Queue D) Tree
+Answer: D
+11. What is the index of first element in array?
+A) 0 B) 1 C) -1 D) Depends
+Answer: A
+12. Which traversal visits root first?
+A) Inorder B) Preorder C) Postorder D) Level
+Answer: B
+13. Which traversal visits root last?
+A) Inorder B) Preorder C) Postorder D) Level
+Answer: C
+14. Which data structure is used for recursion?
+A) Queue B) Stack C) Array D) Graph
+Answer: B
+15. What is a node?
+A) Data only B) Pointer only C) Data + pointer D) Function
+Answer: C
+16. Which DS is used in BFS?
+A) Stack B) Queue C) Array D) Tree
+Answer: B
+17. Which DS is used in DFS?
+A) Queue B) Stack C) Heap D) Array
+Answer: B
+18. Which structure has parent-child relation?
+A) Array B) Stack C) Tree D) Queue
+Answer: C
+19. What is top of stack?
+A) First element B) Last inserted C) Middle D) None
+Answer: B
+20. Which operation checks empty stack?
+A) isEmpty B) push C) pop D) top
+Answer: A
+
+Medium Level Data Structures MCQs (with Answers)
+1. What is the time complexity of inserting at the beginning of a linked list?
+A) O(1) B) O(n) C) O(log n) D) O(n log n)
+Answer: A
+2. Which traversal of a binary tree uses a stack (implicitly/explicitly)?
+A) BFS B) DFS C) Level order D) None
+Answer: B
+3. What is the average time complexity of binary search?
+A) O(n) B) O(log n) C) O(n log n) D) O(1)
+Answer: B
+4. Which data structure is best for implementing recursion?
+A) Queue B) Stack C) Heap D) Graph
+Answer: B
+5. In a circular queue, when is the queue full?
+A) rear == front B) (rear+1)%n == front C) rear == n D) front == 0
+Answer: B
+6. What is the time complexity of deleting from the end of a singly linked list (without tail)?
+A) O(1) B) O(n) C) O(log n) D) O(n log n)
+Answer: B
+7. Which structure is used for priority scheduling?
+A) Stack B) Queue C) Priority Queue D) Array
+Answer: C
+8. What is the worst-case height of a BST?
+A) log n B) n C) n log n D) sqrt(n)
+Answer: B
+9. Which hashing technique resolves collisions by probing?
+A) Chaining B) Linear probing C) Separate chaining D) Bucketing
+Answer: B
+10. What is the time complexity of heapify?
+A) O(1) B) O(log n) C) O(n) D) O(n log n)
+Answer: B
+11. Which traversal gives reverse sorted order in BST?
+A) Inorder B) Preorder C) Postorder D) Reverse inorder
+Answer: D
+12. Which data structure is used in undo operations?
+A) Queue B) Stack C) Tree D) Graph
+Answer: B
+13. What is the space complexity of adjacency list?
+A) O(V^2) B) O(V+E) C) O(E^2) D) O(V)
+Answer: B
+14. Which sorting is in-place?
+A) Merge sort B) Quick sort C) Counting sort D) Radix sort
+Answer: B
+15. What is the time complexity of enqueue in queue?
+A) O(1) B) O(n) C) O(log n) D) O(n log n)
+Answer: A
+16. Which DS is used to check balanced parentheses?
+A) Queue B) Stack C) Heap D) Graph
+Answer: B
+17. What is the best case of quicksort?
+A) O(n^2) B) O(n log n) C) O(log n) D) O(n)
+Answer: B
+18. Which tree is always balanced?
+A) BST B) AVL Tree C) Binary Tree D) Heap
+Answer: B
+19. What is the time complexity of searching in a hash table (average)?
+A) O(1) B) O(n) C) O(log n) D) O(n log n)
+Answer: A
+20. Which structure is used in breadth-first traversal?
+A) Stack B) Queue C) Heap D) Tree
+Answer: B
+
+Medium Level Java Programming MCQs (with Answers)
+1. What is method overloading?
+A) Same method different class B) Same name different parameters C) Different name same parameters D) None
+Answer: B
+2. Which keyword is used to prevent method overriding?
+A) static B) final C) const D) abstract
+Answer: B
+3. What is JVM?
+A) Java Variable Machine B) Java Virtual Machine C) Java Verified Machine D) None
+Answer: B
+4. Which exception is unchecked?
+A) IOException B) SQLException C) NullPointerException D) InterruptedException
+Answer: C
+5. What is inheritance?
+A) Code reuse B) Data hiding C) Encapsulation D) None
+Answer: A
+6. Which keyword is used for interface?
+A) class B) interface C) implements D) extends
+Answer: B
+7. What is output?
+System.out.println(10/3);
+A) 3.33 B) 3 C) 4 D) Error
+Answer: B
+8. Which collection allows duplicates?
+A) Set B) Map C) List D) None
+Answer: C
+9. Which keyword is used for abstraction?
+A) abstract B) static C) final D) private
+Answer: A
+10. What is constructor?
+A) Special method B) Variable C) Class D) Loop
+Answer: A
+11. Which keyword is used to implement interface?
+A) extends B) implements C) inherit D) interface
+Answer: B
+12. What is output?
+System.out.println("Hello"+5+5);
+A) Hello10 B) Hello55 C) 10Hello D) Error
+Answer: B
+13. Which keyword is used to call superclass constructor?
+A) this B) super C) base D) parent
+Answer: B
+14. Which collection is ordered?
+A) Set B) List C) Map D) None
+Answer: B
+15. What is encapsulation?
+A) Wrapping data and methods B) Inheritance C) Loop D) Function
+Answer: A
+16. Which class is parent of all classes?
+A) Object B) Class C) Main D) String
+Answer: A
+17. What is output?
+System.out.println(5+5+"Hello");
+A) 10Hello B) Hello10 C) 55Hello D) Error
+Answer: A
+18. Which keyword is used for thread?
+A) thread B) Runnable C) process D) execute
+Answer: B
+19. Which operator is used for instanceof?
+A) instanceof B) is C) type D) check
+Answer: A
+20. Which collection uses key-value pair?
+A) List B) Set C) Map D) Array
+Answer: C
+
+Hard Level Java Programming MCQs (with Answers)
+1. What is the output?
+System.out.println(1 + 2 + "3" + 4 + 5);
+A) 3345 B) 3345 C) 3345 D) 3345
+Answer: A
+2. What is the output?
+System.out.println("3" + 4 + 5);
+A) 12 B) 345 C) 39 D) 9
+Answer: B
+3. Which exception is thrown when dividing by zero (int)?
+A) IOException B) ArithmeticException C) NullPointerException D) RuntimeException
+Answer: B
+4. What is the output?
+int x=5; System.out.println(x++ + ++x);
+A) 11 B) 12 C) Undefined D) 13
+Answer: D
+5. Which method cannot be overridden?
+A) static B) final C) private D) All
+Answer: D
+6. What is the output?
+System.out.println(10 + 20 + "Java" + 10 + 20);
+A) 30Java1020 B) Java301020 C) 30Java30 D) Error
+Answer: A
+7. Which keyword is used to stop inheritance?
+A) static B) final C) const D) abstract
+Answer: B
+8. What is the output?
+System.out.println(true && false || true);
+A) true B) false C) Error D) Undefined
+Answer: A
+9. Which class is immutable?
+A) String B) StringBuilder C) StringBuffer D) All
+Answer: A
+10. What is the output?
+System.out.println(5 > 3 ? 10 : 20);
+A) 10 B) 20 C) Error D) None
+Answer: A
+11. Which keyword is used for runtime polymorphism?
+A) static B) final C) override D) virtual
+Answer: C
+12. What is the output?
+System.out.println("A" + 1 + 2);
+A) A12 B) A3 C) 3A D) Error
+Answer: A
+13. Which interface is used for threads?
+A) Thread B) Runnable C) Process D) Executor
+Answer: B
+14. What is the output?
+System.out.println(10 * 20 + "Java");
+A) 200Java B) Java200 C) 30Java D) Error
+Answer: A
+15. Which block always executes?
+A) try B) catch C) finally D) throw
+Answer: C
+16. What is the output?
+System.out.println(5 + "5" + 5);
+A) 15 B) 555 C) 105 D) Error
+Answer: B
+17. Which keyword is used to throw exception?
+A) throws B) throw C) try D) catch
+Answer: B
+18. What is the output?
+System.out.println(10 == 10.0);
+A) true B) false C) Error D) Undefined
+Answer: A
+19. Which collection does not allow duplicates?
+A) List B) Set C) Map D) Array
+Answer: B
+20. What is the output?
+System.out.println((10 > 5) ? "Yes" : "No");
+A) Yes B) No C) Error D) None
+Answer: A

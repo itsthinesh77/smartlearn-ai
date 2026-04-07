@@ -424,6 +424,83 @@ export async function getWeakAreas(userId) {
     .sort((a, b) => a.accuracy - b.accuracy);
 }
 
+// =====================================================
+// ---- Topic-Level Analytics ----
+// =====================================================
+
+/**
+ * Returns a map of { [topicId]: { accuracy, attempts, courseId } }
+ * built from localStorage quiz history.
+ */
+export async function getAllTopicPerformances(userId) {
+  const history = await getUserQuizHistory(userId);
+  const topics = {};
+  history.forEach(r => {
+    if (!r.topicId) return;
+    if (!topics[r.topicId]) {
+      topics[r.topicId] = { correct: 0, total: 0, attempts: 0, courseId: r.courseId || '' };
+    }
+    topics[r.topicId].correct  += r.score  || 0;
+    topics[r.topicId].total    += r.total   || 0;
+    topics[r.topicId].attempts += 1;
+    if (r.courseId) topics[r.topicId].courseId = r.courseId;
+  });
+  const result = {};
+  for (const [tid, d] of Object.entries(topics)) {
+    result[tid] = {
+      ...d,
+      accuracy: d.total > 0 ? Math.round((d.correct / d.total) * 100) : 0
+    };
+  }
+  return result;
+}
+
+/**
+ * Returns an array of weak topics (accuracy < 60%) sorted worst-first.
+ * Each entry: { topicId, courseId, accuracy, attempts }
+ */
+export async function getWeakTopics(userId) {
+  const perfs = await getAllTopicPerformances(userId);
+  return Object.entries(perfs)
+    .filter(([_, d]) => d.accuracy < 60)
+    .map(([topicId, d]) => ({ topicId, courseId: d.courseId, accuracy: d.accuracy, attempts: d.attempts }))
+    .sort((a, b) => a.accuracy - b.accuracy);
+}
+
+/**
+ * Returns 'easy' | 'medium' | 'hard' based on the user's recent
+ * performance in a given course. Falls back to 'easy' for new users.
+ */
+export function getRecommendedDifficulty(userId, courseId) {
+  const results = ls_getResults().filter(r => r.userId === userId && r.courseId === courseId);
+  if (results.length === 0) return 'easy';
+  // Use most recent 5 attempts
+  const recent = results.slice(-5);
+  const totalCorrect = recent.reduce((s, r) => s + (r.score || 0), 0);
+  const totalQ      = recent.reduce((s, r) => s + (r.total  || 1), 0);
+  const accuracy    = Math.round((totalCorrect / totalQ) * 100);
+  if (accuracy >= 80) return 'hard';
+  if (accuracy >= 55) return 'medium';
+  return 'easy';
+}
+
+/**
+ * Synchronous version of topic performance for the courses list.
+ * Uses localStorage results for immediate rendering.
+ */
+export function getTopicPerformance(userId, topicId) {
+  const results = ls_getResults().filter(r => r.userId === userId && r.topicId === topicId);
+  if (results.length === 0) return null;
+
+  const totalCorrect = results.reduce((s, r) => s + (r.score || 0), 0);
+  const totalQ      = results.reduce((s, r) => s + (r.total  || 1), 0);
+
+  return {
+    accuracy: Math.round((totalCorrect / totalQ) * 100),
+    attempts: results.length
+  };
+}
+
 export function getCompletionProgress(userId) {
   const completed = _currentUser?.completed_topics || [];
   const totalTopics = 100;

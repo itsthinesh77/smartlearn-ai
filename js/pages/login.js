@@ -96,10 +96,6 @@ function getAuthHTML() {
           <p style="margin: 0; font-size: 0.78rem;">Your data is stored securely in the cloud via Supabase. Sign up with any email to get started!</p>
         </div>
 
-        <!-- DEV BYPASS BUTTON -->
-        <button id="dev-skip-auth" class="btn btn-ghost btn-sm" style="margin-top: 16px; width: 100%; color: var(--text-muted); border: 1px dashed var(--border);">
-          🛠️ Dev: Skip Auth (Bypass Email Limit)
-        </button>
       </div>
     </div>
   `;
@@ -158,15 +154,7 @@ export function bindLoginEvents() {
     });
   }
 
-  const skipBtn = document.getElementById('dev-skip-auth');
-  if (skipBtn) {
-    skipBtn.addEventListener('click', async () => {
-      const { bypassAuth } = await import('../store.js');
-      await bypassAuth();
-      showToast('🛠️ Dev Mode: Access Granted! 🎉', 'success');
-      setTimeout(() => navigate('/dashboard'), 300);
-    });
-  }
+
 
   if (form) {
     form.addEventListener('submit', async (e) => {
